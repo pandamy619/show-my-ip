@@ -4,7 +4,7 @@ enum MenuBarLabel: Equatable {
 
     private static let unknownCountryEmoji = "🌐"
 
-    static func make(for status: AppState.Status) -> MenuBarLabel {
+    static func make(for status: AppState.Status, isCompact: Bool = false) -> MenuBarLabel {
         switch status {
         case .loading:
             .symbol("globe")
@@ -13,7 +13,12 @@ enum MenuBarLabel: Equatable {
         case .failed:
             .symbol("exclamationmark.triangle")
         case .loaded(let info):
-            .text("\(info.country?.flagEmoji ?? unknownCountryEmoji) \(info.address.value)")
+            loadedLabel(for: info, isCompact: isCompact)
         }
+    }
+
+    private static func loadedLabel(for info: IPInfo, isCompact: Bool) -> MenuBarLabel {
+        let flag = info.country?.flagEmoji ?? unknownCountryEmoji
+        return isCompact ? .text(flag) : .text("\(flag) \(info.address.value)")
     }
 }
