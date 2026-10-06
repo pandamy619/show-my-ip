@@ -15,6 +15,14 @@ struct ShowMyIPApp: App {
 
     var body: some Scene {
         MenuBarExtra {
+            MenuInfoView(
+                items: MenuInfoBuilder.items(
+                    for: appState.status,
+                    localAddresses: appState.localAddresses,
+                    locale: .current
+                )
+            )
+            Divider()
             Button("Refresh") {
                 Task { await appState.refresh() }
             }
