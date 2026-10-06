@@ -13,12 +13,14 @@ final class AppState {
     typealias Sleep = @Sendable (Duration) async throws -> Void
 
     private(set) var status: Status = .loading
+    private(set) var localAddresses: [LocalAddress] = []
 
     private let provider: any IPProvider
     private let networkMonitor: any NetworkMonitoring
     private let refreshInterval: Duration
     private let debounceInterval: Duration
     private let sleep: Sleep
+    private let readLocalAddresses: @Sendable () -> [LocalAddress]
 
     @ObservationIgnored private var lastSnapshot: NetworkSnapshot?
     @ObservationIgnored private var refreshGeneration = 0
@@ -30,13 +32,15 @@ final class AppState {
         networkMonitor: any NetworkMonitoring,
         refreshInterval: Duration = .seconds(300),
         debounceInterval: Duration = .seconds(3),
-        sleep: @escaping Sleep = { try await Task.sleep(for: $0) }
+        sleep: @escaping Sleep = { try await Task.sleep(for: $0) },
+        readLocalAddresses: @escaping @Sendable () -> [LocalAddress] = LocalAddressReader.read
     ) {
         self.provider = provider
         self.networkMonitor = networkMonitor
         self.refreshInterval = refreshInterval
         self.debounceInterval = debounceInterval
         self.sleep = sleep
+        self.readLocalAddresses = readLocalAddresses
     }
 
     func start() {
@@ -67,6 +71,7 @@ final class AppState {
     }
 
     func refresh() async {
+        localAddresses = readLocalAddresses()
         guard !isOffline else {
             status = .offline
             return
@@ -94,6 +99,7 @@ final class AppState {
         }
         guard snapshot.isConnected else {
             debouncedRefreshTask?.cancel()
+            localAddresses = readLocalAddresses()
             status = .offline
             return
         }
