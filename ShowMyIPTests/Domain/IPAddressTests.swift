@@ -31,4 +31,9 @@ struct IPAddressTests {
     func invalidInputIsRejected(rawValue: String) {
         #expect(IPAddress(rawValue) == nil)
     }
+
+    @Test func overlongInputIsRejected() {
+        let overlong = String(repeating: "1:", count: 23)
+        #expect(IPAddress(overlong) == nil)
+    }
 }
