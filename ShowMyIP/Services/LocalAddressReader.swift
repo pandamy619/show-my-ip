@@ -1,4 +1,5 @@
 import Darwin
+import Foundation
 
 enum LocalAddressReader {
     static func read() -> [LocalAddress] {
@@ -36,7 +37,10 @@ enum LocalAddressReader {
         guard status == 0 else {
             return nil
         }
-        let address = String(decoding: host.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) }, as: UTF8.self)
+        let bytes = host.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) }
+        guard let address = String(bytes: bytes, encoding: .utf8) else {
+            return nil
+        }
         return InterfaceAddress(interfaceName: String(cString: interface.ifa_name), address: address)
     }
 }
