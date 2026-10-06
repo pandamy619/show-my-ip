@@ -12,11 +12,15 @@ struct AppStateTests {
     private func makeState(
         provider: any IPProvider,
         networkMonitor: any NetworkMonitoring = StubNetworkMonitor(stream: AsyncStream { _ in }),
-        sleeper: ManualSleeper = ManualSleeper()
+        sleeper: ManualSleeper = ManualSleeper(),
+        localAddresses: [LocalAddress] = []
     ) -> AppState {
-        AppState(provider: provider, networkMonitor: networkMonitor) { duration in
-            try await sleeper.sleep(for: duration)
-        }
+        AppState(
+            provider: provider,
+            networkMonitor: networkMonitor,
+            sleep: { duration in try await sleeper.sleep(for: duration) },
+            readLocalAddresses: { localAddresses }
+        )
     }
 
     @Test func initialStatusIsLoading() throws {
@@ -127,5 +131,14 @@ struct AppStateTests {
         continuation.yield(wifi)
         continuation.yield(offline)
         try await waitUntil { await state.status == .offline }
+    }
+
+    @Test func refreshUpdatesLocalAddresses() async throws {
+        let info = try IPInfo.fixture(address: "8.8.8.8")
+        let address = try #require(IPAddress("192.168.1.5"))
+        let local = LocalAddress(interfaceName: "en0", address: address)
+        let state = makeState(provider: StubIPProvider { info }, localAddresses: [local])
+        await state.refresh()
+        #expect(state.localAddresses == [local])
     }
 }
