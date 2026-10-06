@@ -6,11 +6,14 @@ struct IPAddress: Equatable, Sendable {
         case v6
     }
 
+    private static let allowedCharacters = Set("0123456789abcdefABCDEF.:")
+    private static let maximumLength = 45
+
     let value: String
     let version: Version
 
     init?(_ rawValue: String) {
-        guard !rawValue.contains("\0") else {
+        guard rawValue.count <= Self.maximumLength, rawValue.allSatisfy(Self.allowedCharacters.contains) else {
             return nil
         }
         if Self.isValid(rawValue, family: AF_INET) {
