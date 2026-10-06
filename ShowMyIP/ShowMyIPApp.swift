@@ -11,6 +11,7 @@ struct ShowMyIPApp: App {
     )
     @State private var screenObserver = ScreenObserver()
     @AppStorage("displayMode") private var displayMode: DisplayMode = .automatic
+    @AppStorage("compactStyle") private var compactStyle: CompactStyle = .flag
 
     var body: some Scene {
         MenuBarExtra {
@@ -21,6 +22,11 @@ struct ShowMyIPApp: App {
             Picker("Display", selection: $displayMode) {
                 ForEach(DisplayMode.allCases) { mode in
                     Text(mode.title).tag(mode)
+                }
+            }
+            Picker("Compact Style", selection: $compactStyle) {
+                ForEach(CompactStyle.allCases) { style in
+                    Text(style.title).tag(style)
                 }
             }
             Divider()
@@ -39,6 +45,6 @@ struct ShowMyIPApp: App {
 
     private var menuBarLabel: MenuBarLabel {
         let isCompact = displayMode.isCompact(hasNotchedScreen: screenObserver.hasNotchedScreen)
-        return MenuBarLabel.make(for: appState.status, isCompact: isCompact)
+        return MenuBarLabel.make(for: appState.status, isCompact: isCompact, compactStyle: compactStyle)
     }
 }
