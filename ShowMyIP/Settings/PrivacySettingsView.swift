@@ -4,7 +4,7 @@ struct PrivacySettingsView: View {
     typealias Key = PrivacyPreferences.Key
 
     private static let footer = """
-        While hidden, addresses in the menu bar, the menu and notifications are replaced with •••. \
+        While hidden, addresses in the menu bar, the menu and notifications are masked, for example ***.**.**.**. \
         Clicking an address in the menu still copies it.
         """
 
