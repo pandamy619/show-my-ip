@@ -22,7 +22,18 @@ final class NotificationCoordinator {
         }
     }
 
-    func requestAuthorization() async -> Bool {
-        await sender.requestAuthorization()
+    func authorizationStatus() async -> NotificationAuthorization {
+        await sender.authorizationStatus()
+    }
+
+    func enableNotifications() async -> NotificationEnableResult {
+        switch await sender.authorizationStatus() {
+        case .authorized:
+            return .enabled
+        case .denied:
+            return .deniedInSystemSettings
+        case .notDetermined:
+            return await sender.requestAuthorization() ? .enabled : .deniedByUser
+        }
     }
 }

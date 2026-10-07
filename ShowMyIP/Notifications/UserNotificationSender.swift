@@ -17,6 +17,19 @@ struct UserNotificationSender: NotificationSending {
         UNUserNotificationCenter.current().delegate = presenter
     }
 
+    func authorizationStatus() async -> NotificationAuthorization {
+        switch await UNUserNotificationCenter.current().notificationSettings().authorizationStatus {
+        case .authorized, .provisional:
+            .authorized
+        case .denied:
+            .denied
+        case .notDetermined:
+            .notDetermined
+        @unknown default:
+            .notDetermined
+        }
+    }
+
     func requestAuthorization() async -> Bool {
         do {
             return try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])

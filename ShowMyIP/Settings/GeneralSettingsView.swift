@@ -7,7 +7,7 @@ struct GeneralSettingsView: View {
 
     var body: some View {
         Form {
-            Section {
+            Section("Startup") {
                 Toggle("Launch at login", isOn: launchAtLoginBinding)
                 if launchAtLogin.status == .requiresApproval {
                     Text("Allow Show My IP in System Settings to start it at login.")

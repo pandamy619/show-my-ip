@@ -10,7 +10,20 @@ struct NotificationContent: Equatable, Sendable {
     }
 }
 
+enum NotificationAuthorization: Equatable, Sendable {
+    case notDetermined
+    case denied
+    case authorized
+}
+
+enum NotificationEnableResult: Equatable, Sendable {
+    case enabled
+    case deniedByUser
+    case deniedInSystemSettings
+}
+
 protocol NotificationSending: Sendable {
+    func authorizationStatus() async -> NotificationAuthorization
     func requestAuthorization() async -> Bool
     func send(_ content: NotificationContent) async
 }
