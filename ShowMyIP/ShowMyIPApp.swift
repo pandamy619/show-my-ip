@@ -10,6 +10,7 @@ struct ShowMyIPApp: App {
         networkMonitor: NWPathNetworkMonitor()
     )
     @State private var screenObserver = ScreenObserver()
+    @State private var notificationCoordinator = NotificationCoordinator(sender: UserNotificationSender())
     @AppStorage("displayMode") private var displayMode: DisplayMode = .automatic
     @AppStorage("compactStyle") private var compactStyle: CompactStyle = .flag
 
@@ -37,6 +38,10 @@ struct ShowMyIPApp: App {
                     Text(style.title).tag(style)
                 }
             }
+            NotificationsMenu(
+                currentCountry: currentCountry,
+                requestAuthorization: { await notificationCoordinator.requestAuthorization() }
+            )
             Divider()
             Button("Quit") {
                 NSApplication.shared.terminate(nil)
@@ -48,11 +53,21 @@ struct ShowMyIPApp: App {
                     appState.start()
                     screenObserver.start()
                 }
+                .onChange(of: appState.status) { _, newStatus in
+                    notificationCoordinator.handle(newStatus, preferences: .load(from: .standard))
+                }
         }
     }
 
     private var menuBarLabel: MenuBarLabel {
         let isCompact = displayMode.isCompact(hasNotchedScreen: screenObserver.hasNotchedScreen)
         return MenuBarLabel.make(for: appState.status, isCompact: isCompact, compactStyle: compactStyle)
+    }
+
+    private var currentCountry: CountryCode? {
+        guard case .loaded(let info) = appState.status else {
+            return nil
+        }
+        return info.country
     }
 }
