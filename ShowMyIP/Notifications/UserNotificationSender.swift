@@ -21,6 +21,8 @@ struct UserNotificationSender: NotificationSending {
         do {
             return try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound])
         } catch {
+            let reason = error.localizedDescription
+            AppLogger.notifications.error("Authorization request failed: \(reason, privacy: .public)")
             return false
         }
     }
@@ -33,6 +35,10 @@ struct UserNotificationSender: NotificationSending {
             notificationContent.sound = .default
         }
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
-        try? await UNUserNotificationCenter.current().add(request)
+        do {
+            try await UNUserNotificationCenter.current().add(request)
+        } catch {
+            AppLogger.notifications.error("Delivery failed: \(error.localizedDescription, privacy: .public)")
+        }
     }
 }
