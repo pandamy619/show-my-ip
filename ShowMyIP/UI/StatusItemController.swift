@@ -85,14 +85,23 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     }
 
     private func renderLabel() {
+        let visibleLabel = makeLabel(isHidden: false)
+        let shownLabel = privacyState.isHidden ? makeLabel(isHidden: true) : visibleLabel
+        apply(visibleLabel)
+        let visibleWidth = statusItem.button?.intrinsicContentSize.width ?? NSStatusItem.variableLength
+        apply(shownLabel)
+        // Keeps the menu bar item as wide as the real address so hiding it does not shift neighbouring icons.
+        statusItem.length = shownLabel == visibleLabel ? NSStatusItem.variableLength : visibleWidth
+    }
+
+    private func makeLabel(isHidden: Bool) -> MenuBarLabel {
         let settings = DisplaySettings.load(from: defaults)
-        let label = MenuBarLabel.make(
+        return MenuBarLabel.make(
             for: appState.status,
             isCompact: settings.displayMode.isCompact(hasNotchedScreen: screenObserver.hasNotchedScreen),
             compactStyle: settings.compactStyle,
-            isHidden: privacyState.isHidden
+            isHidden: isHidden
         )
-        apply(label)
     }
 
     private func apply(_ label: MenuBarLabel) {
