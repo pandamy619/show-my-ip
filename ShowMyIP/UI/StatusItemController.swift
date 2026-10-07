@@ -1,0 +1,157 @@
+import AppKit
+import Observation
+
+@MainActor
+final class StatusItemController: NSObject, NSMenuDelegate {
+    private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    private let menu = NSMenu()
+    private let appState: AppState
+    private let screenObserver: ScreenObserver
+    private let notificationCoordinator: NotificationCoordinator
+    private let settingsWindowController: SettingsWindowController
+    private let defaults: UserDefaults
+    private var lastHandledStatus: AppState.Status?
+    private var defaultsObserver: (any NSObjectProtocol)?
+
+    init(
+        appState: AppState,
+        screenObserver: ScreenObserver,
+        notificationCoordinator: NotificationCoordinator,
+        settingsWindowController: SettingsWindowController,
+        defaults: UserDefaults = .standard
+    ) {
+        self.appState = appState
+        self.screenObserver = screenObserver
+        self.notificationCoordinator = notificationCoordinator
+        self.settingsWindowController = settingsWindowController
+        self.defaults = defaults
+        super.init()
+        menu.delegate = self
+        configureButton()
+        observeDefaults()
+        observeState()
+    }
+
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        menu.removeAllItems()
+        let infoItems = MenuInfoBuilder.items(
+            for: appState.status,
+            localAddresses: appState.localAddresses,
+            locale: .current
+        )
+        infoItems.forEach { menu.addItem(makeInfoItem($0)) }
+        menu.addItem(.separator())
+        menu.addItem(makeActionItem("Refresh", action: #selector(refresh), key: "r"))
+        menu.addItem(makeActionItem("Settings…", action: #selector(openSettings), key: ","))
+        menu.addItem(.separator())
+        menu.addItem(makeActionItem("Quit", action: #selector(quit), key: "q"))
+    }
+
+    private func configureButton() {
+        guard let button = statusItem.button else {
+            return
+        }
+        button.target = self
+        button.action = #selector(statusItemClicked)
+        button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+    }
+
+    private func observeDefaults() {
+        defaultsObserver = NotificationCenter.default.addObserver(
+            forName: UserDefaults.didChangeNotification,
+            object: defaults,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.renderLabel()
+            }
+        }
+    }
+
+    private func observeState() {
+        withObservationTracking {
+            renderLabel()
+            forwardStatusToNotifications()
+        } onChange: { [weak self] in
+            Task { @MainActor in
+                self?.observeState()
+            }
+        }
+    }
+
+    private func renderLabel() {
+        let settings = DisplaySettings.load(from: defaults)
+        let label = MenuBarLabel.make(
+            for: appState.status,
+            isCompact: settings.displayMode.isCompact(hasNotchedScreen: screenObserver.hasNotchedScreen),
+            compactStyle: settings.compactStyle
+        )
+        apply(label)
+    }
+
+    private func apply(_ label: MenuBarLabel) {
+        guard let button = statusItem.button else {
+            return
+        }
+        switch label {
+        case .text(let text):
+            button.image = nil
+            button.title = text
+        case .symbol(let name):
+            button.title = ""
+            button.image = NSImage(systemSymbolName: name, accessibilityDescription: "Show My IP")
+            button.image?.isTemplate = true
+        }
+    }
+
+    private func forwardStatusToNotifications() {
+        let status = appState.status
+        guard status != lastHandledStatus else {
+            return
+        }
+        lastHandledStatus = status
+        notificationCoordinator.handle(status, preferences: .load(from: defaults))
+    }
+
+    private func makeInfoItem(_ info: MenuInfoItem) -> NSMenuItem {
+        let item = NSMenuItem(title: info.title, action: nil, keyEquivalent: "")
+        if let copyValue = info.copyValue {
+            item.action = #selector(copyToPasteboard(_:))
+            item.target = self
+            item.representedObject = copyValue
+        }
+        return item
+    }
+
+    private func makeActionItem(_ title: String, action: Selector, key: String) -> NSMenuItem {
+        let item = NSMenuItem(title: title, action: action, keyEquivalent: key)
+        item.target = self
+        return item
+    }
+
+    @objc private func statusItemClicked() {
+        statusItem.menu = menu
+        statusItem.button?.performClick(nil)
+        statusItem.menu = nil
+    }
+
+    @objc private func copyToPasteboard(_ sender: NSMenuItem) {
+        guard let value = sender.representedObject as? String else {
+            return
+        }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(value, forType: .string)
+    }
+
+    @objc private func refresh() {
+        Task { await appState.refresh() }
+    }
+
+    @objc private func openSettings() {
+        settingsWindowController.show()
+    }
+
+    @objc private func quit() {
+        NSApplication.shared.terminate(nil)
+    }
+}
