@@ -8,12 +8,12 @@ struct PrivacyMaskingTests {
 
     @Test func fullLabelMasksAddress() throws {
         let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
-        #expect(MenuBarLabel.make(for: .loaded(info), isHidden: true) == .text("🇳🇱 •••"))
+        #expect(MenuBarLabel.make(for: .loaded(info), isHidden: true) == .text("🇳🇱 ***.**.**.**"))
     }
 
     @Test func fullLabelWithoutCountryMasksAddress() throws {
         let info = try IPInfo.fixture(address: "8.8.8.8")
-        #expect(MenuBarLabel.make(for: .loaded(info), isHidden: true) == .text("🌐 •••"))
+        #expect(MenuBarLabel.make(for: .loaded(info), isHidden: true) == .text("🌐 *.*.*.*"))
     }
 
     @Test func compactLabelIsUnchanged() throws {
@@ -35,8 +35,8 @@ struct PrivacyMaskingTests {
         #expect(
             items == [
                 MenuInfoItem(title: "🇳🇱 Netherlands"),
-                MenuInfoItem(title: "Public IPv4: •••", copyValue: "185.23.45.67"),
-                MenuInfoItem(title: "Local IP (en0): •••", copyValue: "192.168.1.5"),
+                MenuInfoItem(title: "Public IPv4: ***.**.**.**", copyValue: "185.23.45.67"),
+                MenuInfoItem(title: "Local IP (en0): ***.***.*.*", copyValue: "192.168.1.5"),
             ]
         )
     }
@@ -51,5 +51,14 @@ struct PrivacyMaskingTests {
         )
         let expected = NotificationContent(title: "IP address changed", body: "Your public IP address has changed.")
         #expect(content == expected)
+    }
+
+    @Test(arguments: [
+        ("185.23.45.67", "***.**.**.**"),
+        ("8.8.8.8", "*.*.*.*"),
+        ("2a01:4f8::1", "****:***::*"),
+    ])
+    func maskKeepsSeparators(address: String, expected: String) {
+        #expect(PrivacyPreferences.masked(address) == expected)
     }
 }
