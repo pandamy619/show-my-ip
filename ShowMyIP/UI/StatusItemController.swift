@@ -8,7 +8,11 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         weight: .regular
     )
 
+    private static let regularFont = NSFont.menuBarFont(ofSize: 0)
+    private static let spoilerHeight: CGFloat = 16
+
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    private let spoilerView = SpoilerView()
     private let menu = NSMenu()
     private let appState: AppState
     private let screenObserver: ScreenObserver
@@ -62,6 +66,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         }
         button.target = self
         button.action = #selector(statusItemClicked)
+        spoilerView.isHidden = true
+        button.addSubview(spoilerView)
         button.sendAction(on: [.leftMouseUp, .rightMouseUp])
     }
 
@@ -91,17 +97,21 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     private func renderLabel() {
         let visibleLabel = makeLabel(isHidden: false)
-        guard privacyState.isHidden else {
+        let hiddenLabel = makeLabel(isHidden: true)
+        guard privacyState.isHidden, hiddenLabel != visibleLabel else {
             apply(visibleLabel)
             statusItem.length = NSStatusItem.variableLength
+            spoilerView.isHidden = true
             return
         }
+        let style = PrivacyPreferences.load(from: defaults).hiddenStyle
         apply(visibleLabel)
         let visibleWidth = statusItem.button?.intrinsicContentSize.width ?? 0
-        apply(makeLabel(isHidden: true), isMasked: true)
+        apply(hiddenLabel, maskedWith: style)
         let maskedWidth = statusItem.button?.intrinsicContentSize.width ?? 0
         // Keeps the menu bar item at least as wide as the real address so hiding it does not shift neighbouring icons.
         statusItem.length = max(visibleWidth, maskedWidth)
+        layoutSpoiler(over: hiddenLabel, style: style)
     }
 
     private func makeLabel(isHidden: Bool) -> MenuBarLabel {
@@ -114,22 +124,59 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         )
     }
 
-    private func apply(_ label: MenuBarLabel, isMasked: Bool = false) {
+    private func apply(_ label: MenuBarLabel, maskedWith style: HiddenStyle? = nil) {
         guard let button = statusItem.button else {
             return
         }
         switch label {
-        case .text(let text) where isMasked:
-            button.image = nil
-            button.attributedTitle = NSAttributedString(string: text, attributes: [.font: Self.maskedFont])
         case .text(let text):
             button.image = nil
-            button.title = text
+            if let style {
+                button.attributedTitle = maskedTitle(text, showsMask: !style.usesSpoiler)
+            } else {
+                button.title = text
+            }
         case .symbol(let name):
             button.title = ""
             button.image = NSImage(systemSymbolName: name, accessibilityDescription: "Show My IP")
             button.image?.isTemplate = true
         }
+    }
+
+    private func maskedTitle(_ text: String, showsMask: Bool) -> NSAttributedString {
+        guard let parts = MenuBarLabel.splitAddress(in: text) else {
+            return NSAttributedString(string: text, attributes: [.font: Self.maskedFont])
+        }
+        var addressAttributes: [NSAttributedString.Key: Any] = [.font: Self.maskedFont]
+        if !showsMask {
+            addressAttributes[.foregroundColor] = NSColor.clear
+        }
+        let title = NSMutableAttributedString(string: parts.prefix, attributes: [.font: Self.regularFont])
+        title.append(NSAttributedString(string: parts.address, attributes: addressAttributes))
+        return title
+    }
+
+    private func layoutSpoiler(over label: MenuBarLabel, style: HiddenStyle) {
+        guard style.usesSpoiler,
+            case .text(let text) = label,
+            let parts = MenuBarLabel.splitAddress(in: text),
+            let button = statusItem.button
+        else {
+            spoilerView.isHidden = true
+            return
+        }
+        let titleWidth = maskedTitle(text, showsMask: false).size().width
+        let prefixWidth = NSAttributedString(string: parts.prefix, attributes: [.font: Self.regularFont]).size().width
+        let addressWidth = NSAttributedString(string: parts.address, attributes: [.font: Self.maskedFont]).size().width
+        let height = min(button.bounds.height, Self.spoilerHeight)
+        spoilerView.frame = NSRect(
+            x: (statusItem.length - titleWidth) / 2 + prefixWidth,
+            y: (button.bounds.height - height) / 2,
+            width: addressWidth,
+            height: height
+        )
+        spoilerView.style = style
+        spoilerView.isHidden = false
     }
 
     private func forwardStatusToNotifications() {

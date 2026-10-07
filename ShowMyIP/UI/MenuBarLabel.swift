@@ -42,4 +42,12 @@ enum MenuBarLabel: Equatable {
             return .text("\(country.flagEmoji) \(country.value)")
         }
     }
+
+    static func splitAddress(in text: String) -> (prefix: String, address: String)? {
+        guard let space = text.firstIndex(of: " ") else {
+            return nil
+        }
+        let addressStart = text.index(after: space)
+        return (String(text[..<addressStart]), String(text[addressStart...]))
+    }
 }
