@@ -20,15 +20,15 @@ final class SettingsWindowController {
     }
 
     private func makeWindow() -> NSWindow {
-        let coordinator = notificationCoordinator
-        let rootView = SettingsRootView(appState: appState) {
-            await coordinator.requestAuthorization()
-        }
+        let rootView = SettingsRootView(appState: appState, notificationCoordinator: notificationCoordinator)
         let controller = NSHostingController(rootView: rootView)
         controller.sizingOptions = [.preferredContentSize]
         let window = NSWindow(contentViewController: controller)
         window.title = "Show My IP Settings"
-        window.styleMask = [.titled, .closable]
+        window.styleMask = [.titled, .closable, .fullSizeContentView]
+        window.titlebarAppearsTransparent = true
+        window.titleVisibility = .hidden
+        window.toolbarStyle = .unified
         window.isReleasedWhenClosed = false
         window.center()
         return window
@@ -37,10 +37,10 @@ final class SettingsWindowController {
 
 private struct SettingsRootView: View {
     let appState: AppState
-    let requestAuthorization: @MainActor () async -> Bool
+    let notificationCoordinator: NotificationCoordinator
 
     var body: some View {
-        SettingsView(currentCountry: currentCountry, requestAuthorization: requestAuthorization)
+        SettingsView(currentCountry: currentCountry, notificationCoordinator: notificationCoordinator)
     }
 
     private var currentCountry: CountryCode? {

@@ -1,12 +1,20 @@
+import AppKit
 import SwiftUI
 
 struct NotificationSettingsView: View {
     typealias Key = NotificationPreferences.Key
 
+    private enum PermissionState {
+        case idle
+        case waiting
+        case deniedByUser
+        case deniedInSystemSettings
+    }
+
     private static let initial = NotificationPreferences()
 
     let currentCountry: CountryCode?
-    let requestAuthorization: @MainActor () async -> Bool
+    let coordinator: NotificationCoordinator
 
     @AppStorage(Key.isEnabled) private var isEnabled = Self.initial.isEnabled
     @AppStorage(Key.notifiesCountryChange) private var notifiesCountryChange = Self.initial.notifiesCountryChange
@@ -14,6 +22,7 @@ struct NotificationSettingsView: View {
     @AppStorage(Key.notifiesHomeCountry) private var notifiesHomeCountry = Self.initial.notifiesHomeCountry
     @AppStorage(Key.notifiesConnectionLoss) private var notifiesConnectionLoss = Self.initial.notifiesConnectionLoss
     @AppStorage(Key.homeCountryCode) private var homeCountryCode = ""
+    @State private var permissionState = PermissionState.idle
 
     private let countryOptions = CountryOptions.all(locale: .current)
 
@@ -21,6 +30,7 @@ struct NotificationSettingsView: View {
         Form {
             Section {
                 Toggle("Enable notifications", isOn: enabledBinding)
+                permissionMessage
             }
             Section("Notify about") {
                 Toggle("Country change", isOn: $notifiesCountryChange)
@@ -48,6 +58,31 @@ struct NotificationSettingsView: View {
             .disabled(!isEnabled)
         }
         .formStyle(.grouped)
+        .task { await syncWithSystemPermission() }
+    }
+
+    @ViewBuilder
+    private var permissionMessage: some View {
+        switch permissionState {
+        case .idle:
+            EmptyView()
+        case .waiting:
+            Text("Waiting for permission — answer the macOS notification banner.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        case .deniedByUser:
+            Text("Permission was not granted.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        case .deniedInSystemSettings:
+            HStack {
+                Text("Notifications are turned off for Show My IP in System Settings.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Open Notification Settings", action: openSystemNotificationSettings)
+            }
+        }
     }
 
     private var enabledBinding: Binding<Bool> {
@@ -56,12 +91,42 @@ struct NotificationSettingsView: View {
             set: { newValue in
                 guard newValue else {
                     isEnabled = false
+                    permissionState = .idle
                     return
                 }
-                Task { @MainActor in
-                    isEnabled = await requestAuthorization()
-                }
+                isEnabled = true
+                permissionState = .waiting
+                Task { await enableNotifications() }
             }
         )
+    }
+
+    private func enableNotifications() async {
+        switch await coordinator.enableNotifications() {
+        case .enabled:
+            permissionState = .idle
+        case .deniedByUser:
+            isEnabled = false
+            permissionState = .deniedByUser
+        case .deniedInSystemSettings:
+            isEnabled = false
+            permissionState = .deniedInSystemSettings
+        }
+    }
+
+    private func syncWithSystemPermission() async {
+        guard isEnabled, await coordinator.authorizationStatus() == .denied else {
+            return
+        }
+        isEnabled = false
+        permissionState = .deniedInSystemSettings
+    }
+
+    private func openSystemNotificationSettings() {
+        let bundleID = Bundle.main.bundleIdentifier ?? ""
+        let address = "x-apple.systempreferences:com.apple.Notifications-Settings.extension?id=\(bundleID)"
+        if let url = URL(string: address) {
+            NSWorkspace.shared.open(url)
+        }
     }
 }
