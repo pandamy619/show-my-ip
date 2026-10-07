@@ -4,73 +4,102 @@
 
 <h1 align="center">Show My IP</h1>
 
-<p align="center">Флаг страны и внешний IP в меню-баре macOS.</p>
+<p align="center">Your country flag and public IP in the macOS menu bar.</p>
 
-## Возможности
+<p align="center">
+  <img src="https://img.shields.io/badge/version-0.1.0-blue" alt="Version 0.1.0">
+  <img src="https://img.shields.io/badge/macOS-14%2B-black" alt="macOS 14+">
+  <img src="https://img.shields.io/badge/Swift-6-orange" alt="Swift 6">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">
+</p>
 
-- **Флаг и IP в меню-баре.** На экране с челкой — компактный вид (флаг или флаг с кодом страны), на внешнем мониторе — флаг и IP. Режим можно зафиксировать в настройках.
-- **Автообновление.** IP перепроверяется при смене сети, включении и выключении VPN и раз в 5 минут.
-- **Меню с деталями.** Страна, публичный IP, город и провайдер (если доступны), локальные адреса. Клик по адресу копирует его.
-- **Уведомления**, отключаемые по отдельности: смена страны, смена IP, потеря сети и предупреждение «VPN может быть выключен», когда трафик пошёл через вашу домашнюю страну.
-- **Автозапуск** при входе в систему.
+<p align="center"><a href="README.ru.md">Русская версия</a></p>
 
-## Требования
+<!-- Screenshots: compact menu bar, full menu bar, open menu, notification -->
 
-- macOS 14 Sonoma или новее
-- Xcode 26 или новее — для сборки из исходников
+## Features
 
-## Сборка
+- **Flag and IP in the menu bar,** with a compact mode for small screens.
+- **Always current.** Rechecks on network changes, VPN on/off and every 5 minutes.
+- **Details on click.** Country, public IP, city and provider when available, local addresses. Click an address to copy it.
+- **Notifications.** Country change, IP change, connection loss, and a warning when traffic leaves through your home country — VPN may be off.
+- **Launch at login.**
+- **Private by design.** No analytics, no third-party dependencies, sandboxed.
+
+## Installation
+
+1. Download `ShowMyIP.dmg` from [Releases](https://github.com/pandamy619/show-my-ip/releases).
+2. Drag **Show My IP** to **Applications**.
+3. Launch it. The app is not signed by Apple, so macOS blocks the first launch: open **System Settings → Privacy & Security** and click **Open Anyway**. This is needed once.
+
+## Usage
+
+- Click the flag to see details and copy addresses.
+- **Settings** (⌘,):
+  - **General** — launch at login, display mode (Automatic / Compact / Full), compact style.
+  - **Notifications** — what to notify about and your home country.
+- **Home country alert:** turn off your VPN, open Settings → Notifications and pick the country you are in. You will be warned whenever your traffic goes out through it.
+
+## FAQ
+
+**The IP differs from what website X shows.**
+Your VPN probably uses split tunneling: different sites go through different routes.
+
+**No city or provider in the menu.**
+They come from the backup service and appear only when it was used.
+
+**Only a flag, no IP.**
+That is the compact mode. Change it in Settings → General.
+
+**No Dock icon.**
+By design — the app lives in the menu bar. Quit from its menu (⌘Q).
+
+**How do I uninstall?**
+Quit the app and move it from Applications to the Trash.
+
+## Privacy
+
+The app makes two kinds of HTTPS requests and nothing else:
+
+| Service | When | Data received |
+|---|---|---|
+| `www.cloudflare.com/cdn-cgi/trace` | every refresh | IP, country |
+| `ipinfo.io/json` | only if Cloudflare fails | IP, country, city, provider |
+
+Responses are validated before use. The IP is logged as private and never appears in system logs in plain text. The app runs in the App Sandbox with Hardened Runtime and only the outgoing network entitlement.
+
+## For developers
+
+Requirements: Xcode 26+, macOS 14+.
 
 ```sh
-git clone git@github.com:pandamy619/show-my-ip.git
+git clone https://github.com/pandamy619/show-my-ip.git
 cd show-my-ip
 open ShowMyIP.xcodeproj
 ```
 
-В Xcode выберите схему **ShowMyIP** и **My Mac**, затем ⌘R. Иконка в Dock не появляется: приложение живёт только в меню-баре.
-
-### Команды
-
-| Команда | Что делает |
+| Command | Description |
 |---|---|
-| `make test` | юнит-тесты (Swift Testing) |
-| `make lint` | SwiftLint и swift-format в строгом режиме |
-| `make format` | автоисправление форматирования |
-| `make hooks` | включает проверку линтером перед каждым коммитом |
+| `make test` | unit tests (Swift Testing) |
+| `make lint` | SwiftLint + swift-format, strict |
+| `make format` | auto-format |
+| `make hooks` | run lint before every commit |
 
-Для `make lint` нужен SwiftLint: `brew install swiftlint`. swift-format входит в Xcode.
-
-## Приватность
-
-Приложение отправляет наружу только два запроса, оба по HTTPS:
-
-| Куда | Когда | Что получаем |
-|---|---|---|
-| `https://www.cloudflare.com/cdn-cgi/trace` | при каждом обновлении | IP и код страны |
-| `https://ipinfo.io/json` | только если Cloudflare не ответил | IP, страна, город, провайдер |
-
-- Никакой аналитики, трекинга и сторонних зависимостей.
-- Ответы сервисов проверяются: IP — через `inet_pton`, код страны — две латинские буквы, текст очищается от управляющих символов, размер ответа ограничен.
-- В системный лог IP пишется с пометкой `private` и не виден в открытом виде.
-- Приложение работает в App Sandbox с Hardened Runtime. Из прав — только исходящие сетевые соединения.
-
-## Устройство проекта
+`make lint` needs SwiftLint: `brew install swiftlint`.
 
 ```
 ShowMyIP/
-  App/            AppState — состояние, обновление IP, реакция на сеть; логгер
-  Domain/         IPAddress, CountryCode, IPInfo, LocalAddress — валидируемые модели
-  Services/       HTTP-клиент, провайдеры IP (Cloudflare, ipinfo, fallback), монитор сети
-  Notifications/  правила уведомлений и доставка через UserNotifications
-  Settings/       окно настроек, автозапуск
-  UI/             значок в меню-баре, меню, режимы отображения
-ShowMyIPTests/    тесты по тем же разделам; Support — заглушки для тестов
-design/           исходник логотипа
-scripts/          git-хуки, генератор иконки
+  App/            app state, refresh logic, logging
+  Domain/         validated models: IP address, country code, IP info
+  Services/       HTTP client, IP providers, network monitor
+  Notifications/  notification rules and delivery
+  Settings/       settings window, launch at login
+  UI/             menu bar label, menu, display modes
+ShowMyIPTests/    tests mirroring the app structure
 ```
 
-Иконка собирается из `design/logo.jpg`:
+The app icon is generated from `design/logo.jpg` with `scripts/make_app_icon.py`.
 
-```sh
-python3 scripts/make_app_icon.py design/logo.jpg <жирный-шрифт.otf> ShowMyIP/Assets.xcassets/AppIcon.appiconset
-```
+## License
+
+[MIT](LICENSE)
