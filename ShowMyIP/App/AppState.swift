@@ -79,10 +79,16 @@ final class AppState {
         refreshGeneration += 1
         let generation = refreshGeneration
         let newStatus: Status
+        AppLogger.ipLookup.debug("Refreshing public IP")
         do {
             let info = try await provider.fetchIPInfo()
+            let country = info.country?.value ?? "unknown"
+            AppLogger.ipLookup.info(
+                "Public IP \(info.address.value, privacy: .private), country \(country, privacy: .public)"
+            )
             newStatus = .loaded(info)
         } catch {
+            AppLogger.ipLookup.error("Public IP lookup failed: \(String(describing: error), privacy: .public)")
             newStatus = .failed(error)
         }
         guard generation == refreshGeneration, !isOffline else {
@@ -97,6 +103,10 @@ final class AppState {
         guard snapshot != previous else {
             return
         }
+        let interfaces = snapshot.interfaceNames.sorted().joined(separator: ", ")
+        AppLogger.network.info(
+            "Network changed, connected: \(snapshot.isConnected), interfaces: \(interfaces, privacy: .public)"
+        )
         guard snapshot.isConnected else {
             debouncedRefreshTask?.cancel()
             localAddresses = readLocalAddresses()

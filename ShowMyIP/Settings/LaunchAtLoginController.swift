@@ -26,6 +26,7 @@ final class LaunchAtLoginController {
             }
             didFail = false
         } catch {
+            AppLogger.settings.error("Login item change failed: \(error.localizedDescription, privacy: .public)")
             didFail = true
         }
         status = service.status
