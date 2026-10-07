@@ -34,10 +34,36 @@ struct NotificationCoordinatorTests {
         #expect(await sender.sentContents.isEmpty)
     }
 
-    @Test(arguments: [true, false])
-    func authorizationResultIsPassedThrough(isGranted: Bool) async {
-        let sender = RecordingNotificationSender(isAuthorizationGranted: isGranted)
+    @Test func alreadyAuthorizedEnablesWithoutPrompt() async {
+        let sender = RecordingNotificationSender(status: .authorized)
         let coordinator = NotificationCoordinator(sender: sender)
-        #expect(await coordinator.requestAuthorization() == isGranted)
+        #expect(await coordinator.enableNotifications() == .enabled)
+        #expect(await sender.authorizationRequestCount == 0)
+    }
+
+    @Test func undecidedPromptsAndEnablesWhenGranted() async {
+        let sender = RecordingNotificationSender(status: .notDetermined, isAuthorizationGranted: true)
+        let coordinator = NotificationCoordinator(sender: sender)
+        #expect(await coordinator.enableNotifications() == .enabled)
+        #expect(await sender.authorizationRequestCount == 1)
+    }
+
+    @Test func undecidedPromptsAndReportsRefusal() async {
+        let sender = RecordingNotificationSender(status: .notDetermined, isAuthorizationGranted: false)
+        let coordinator = NotificationCoordinator(sender: sender)
+        #expect(await coordinator.enableNotifications() == .deniedByUser)
+    }
+
+    @Test func deniedInSystemSettingsDoesNotPrompt() async {
+        let sender = RecordingNotificationSender(status: .denied)
+        let coordinator = NotificationCoordinator(sender: sender)
+        #expect(await coordinator.enableNotifications() == .deniedInSystemSettings)
+        #expect(await sender.authorizationRequestCount == 0)
+    }
+
+    @Test(arguments: [NotificationAuthorization.authorized, .denied, .notDetermined])
+    func authorizationStatusIsPassedThrough(status: NotificationAuthorization) async {
+        let coordinator = NotificationCoordinator(sender: RecordingNotificationSender(status: status))
+        #expect(await coordinator.authorizationStatus() == status)
     }
 }
