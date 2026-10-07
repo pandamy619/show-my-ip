@@ -29,9 +29,7 @@ struct NotificationDecider {
         to current: IPInfo,
         preferences: NotificationPreferences
     ) -> IPNotification? {
-        if preferences.notifiesHomeCountry, let home = preferences.homeCountry,
-            current.country == home, previous.country != home
-        {
+        if let home = arrivedHomeCountry(from: previous, to: current, preferences: preferences) {
             return .homeCountryDetected(home)
         }
         if preferences.notifiesCountryChange, previous.country != current.country {
@@ -41,5 +39,16 @@ struct NotificationDecider {
             return .addressChanged(from: previous.address, to: current.address)
         }
         return nil
+    }
+
+    private func arrivedHomeCountry(
+        from previous: IPInfo,
+        to current: IPInfo,
+        preferences: NotificationPreferences
+    ) -> CountryCode? {
+        guard preferences.notifiesHomeCountry, let home = preferences.homeCountry else {
+            return nil
+        }
+        return current.country == home && previous.country != home ? home : nil
     }
 }
