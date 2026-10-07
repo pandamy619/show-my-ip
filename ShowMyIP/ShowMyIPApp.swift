@@ -11,8 +11,8 @@ struct ShowMyIPApp: App {
     )
     @State private var screenObserver = ScreenObserver()
     @State private var notificationCoordinator = NotificationCoordinator(sender: UserNotificationSender())
-    @AppStorage("displayMode") private var displayMode: DisplayMode = .automatic
-    @AppStorage("compactStyle") private var compactStyle: CompactStyle = .flag
+    @AppStorage(SettingsKey.displayMode) private var displayMode: DisplayMode = .automatic
+    @AppStorage(SettingsKey.compactStyle) private var compactStyle: CompactStyle = .flag
 
     var body: some Scene {
         MenuBarExtra {
@@ -28,20 +28,7 @@ struct ShowMyIPApp: App {
                 Task { await appState.refresh() }
             }
             .keyboardShortcut("r")
-            Picker("Display", selection: $displayMode) {
-                ForEach(DisplayMode.allCases) { mode in
-                    Text(mode.title).tag(mode)
-                }
-            }
-            Picker("Compact Style", selection: $compactStyle) {
-                ForEach(CompactStyle.allCases) { style in
-                    Text(style.title).tag(style)
-                }
-            }
-            NotificationsMenu(
-                currentCountry: currentCountry,
-                requestAuthorization: { await notificationCoordinator.requestAuthorization() }
-            )
+            SettingsButton()
             Divider()
             Button("Quit") {
                 NSApplication.shared.terminate(nil)
@@ -56,6 +43,13 @@ struct ShowMyIPApp: App {
                 .onChange(of: appState.status) { _, newStatus in
                     notificationCoordinator.handle(newStatus, preferences: .load(from: .standard))
                 }
+        }
+
+        Settings {
+            SettingsView(
+                currentCountry: currentCountry,
+                requestAuthorization: { await notificationCoordinator.requestAuthorization() }
+            )
         }
     }
 
