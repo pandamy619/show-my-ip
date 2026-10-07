@@ -3,12 +3,21 @@ import Foundation
 struct MenuInfoItem: Equatable, Identifiable {
     let title: String
     let copyValue: String?
+    let maskedSuffix: String?
 
     var id: String { title }
 
-    init(title: String, copyValue: String? = nil) {
+    var unmaskedPrefix: String {
+        guard let maskedSuffix else {
+            return title
+        }
+        return String(title.dropLast(maskedSuffix.count))
+    }
+
+    init(title: String, copyValue: String? = nil, maskedSuffix: String? = nil) {
         self.title = title
         self.copyValue = copyValue
+        self.maskedSuffix = maskedSuffix
     }
 }
 
@@ -43,9 +52,9 @@ enum MenuInfoBuilder {
             items.append(MenuInfoItem(title: "\(country.flagEmoji) \(name)"))
         }
         let address = info.address.value
-        let shownAddress = isHidden ? PrivacyPreferences.masked(address) : address
-        let title = "Public \(versionName(info.address.version)): \(shownAddress)"
-        items.append(MenuInfoItem(title: title, copyValue: address))
+        let mask = isHidden ? PrivacyPreferences.masked(address) : nil
+        let title = "Public \(versionName(info.address.version)): \(mask ?? address)"
+        items.append(MenuInfoItem(title: title, copyValue: address, maskedSuffix: mask))
         guard !isHidden else {
             return items
         }
@@ -59,10 +68,11 @@ enum MenuInfoBuilder {
     }
 
     private static func localAddressItem(_ local: LocalAddress, isHidden: Bool) -> MenuInfoItem {
-        let shownAddress = isHidden ? PrivacyPreferences.masked(local.address.value) : local.address.value
+        let mask = isHidden ? PrivacyPreferences.masked(local.address.value) : nil
         return MenuInfoItem(
-            title: "Local IP (\(local.interfaceName)): \(shownAddress)",
-            copyValue: local.address.value
+            title: "Local IP (\(local.interfaceName)): \(mask ?? local.address.value)",
+            copyValue: local.address.value,
+            maskedSuffix: mask
         )
     }
 

@@ -9,6 +9,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     )
 
     private static let regularFont = NSFont.menuBarFont(ofSize: 0)
+    private static let menuFont = NSFont.menuFont(ofSize: 0)
+    private static let maskedMenuFont = NSFont.monospacedSystemFont(ofSize: menuFont.pointSize, weight: .regular)
     private static let spoilerHeight: CGFloat = 16
 
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -199,7 +201,32 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             item.target = self
             item.representedObject = copyValue
         }
+        if let mask = info.maskedSuffix {
+            decorateMaskedItem(item, info: info, mask: mask)
+        }
         return item
+    }
+
+    private func decorateMaskedItem(_ item: NSMenuItem, info: MenuInfoItem, mask: String) {
+        let style = PrivacyPreferences.load(from: defaults).hiddenStyle
+        guard style.usesSpoiler else {
+            let title = NSMutableAttributedString(string: info.unmaskedPrefix, attributes: [.font: Self.menuFont])
+            title.append(NSAttributedString(string: mask, attributes: [.font: Self.maskedMenuFont]))
+            item.attributedTitle = title
+            return
+        }
+        let copyValue = info.copyValue
+        item.view = SpoilerMenuItemView(
+            prefix: info.unmaskedPrefix,
+            maskedText: mask,
+            style: style,
+            font: Self.menuFont,
+            maskFont: Self.maskedMenuFont
+        ) { [weak self] in
+            if let copyValue {
+                self?.copy(copyValue)
+            }
+        }
     }
 
     private func makeActionItem(_ title: String, action: Selector, key: String) -> NSMenuItem {
@@ -228,6 +255,10 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         guard let value = sender.representedObject as? String else {
             return
         }
+        copy(value)
+    }
+
+    private func copy(_ value: String) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(value, forType: .string)
     }

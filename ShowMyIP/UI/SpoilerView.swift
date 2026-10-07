@@ -8,6 +8,10 @@ final class SpoilerView: NSView {
         didSet { updateAnimation() }
     }
 
+    var color = NSColor.labelColor {
+        didSet { needsDisplay = true }
+    }
+
     private var field: SpoilerParticleField<SystemRandomNumberGenerator>?
     private var timer: Timer?
     private var isHovered = false
@@ -68,7 +72,6 @@ final class SpoilerView: NSView {
             return
         }
         let time = Date().timeIntervalSince(startTime)
-        let color = NSColor.labelColor
         for particle in field.particles {
             let opacity = SpoilerParticleField<SystemRandomNumberGenerator>.opacity(of: particle, at: time)
             color.withAlphaComponent(opacity).setFill()
