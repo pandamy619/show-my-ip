@@ -43,7 +43,7 @@ enum MenuInfoBuilder {
             items.append(MenuInfoItem(title: "\(country.flagEmoji) \(name)"))
         }
         let address = info.address.value
-        let shownAddress = isHidden ? PrivacyPreferences.mask : address
+        let shownAddress = isHidden ? PrivacyPreferences.masked(address) : address
         let title = "Public \(versionName(info.address.version)): \(shownAddress)"
         items.append(MenuInfoItem(title: title, copyValue: address))
         guard !isHidden else {
@@ -59,7 +59,7 @@ enum MenuInfoBuilder {
     }
 
     private static func localAddressItem(_ local: LocalAddress, isHidden: Bool) -> MenuInfoItem {
-        let shownAddress = isHidden ? PrivacyPreferences.mask : local.address.value
+        let shownAddress = isHidden ? PrivacyPreferences.masked(local.address.value) : local.address.value
         return MenuInfoItem(
             title: "Local IP (\(local.interfaceName)): \(shownAddress)",
             copyValue: local.address.value

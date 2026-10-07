@@ -6,10 +6,15 @@ struct PrivacyPreferences: Equatable, Sendable {
         static let hidesOnLaunch = "privacy.hidesOnLaunch"
     }
 
-    static let mask = "•••"
+    private static let separators: Set<Character> = [".", ":"]
+    private static let maskCharacter: Character = "*"
 
     var allowsHiding = false
     var hidesOnLaunch = false
+
+    static func masked(_ address: String) -> String {
+        String(address.map { separators.contains($0) ? $0 : maskCharacter })
+    }
 
     static func load(from defaults: UserDefaults) -> PrivacyPreferences {
         PrivacyPreferences(

@@ -28,7 +28,7 @@ enum MenuBarLabel: Equatable {
         compactStyle: CompactStyle,
         isHidden: Bool
     ) -> MenuBarLabel {
-        let address = isHidden ? PrivacyPreferences.mask : info.address.value
+        let address = isHidden ? PrivacyPreferences.masked(info.address.value) : info.address.value
         guard let country = info.country else {
             return isCompact ? .text(unknownCountryEmoji) : .text("\(unknownCountryEmoji) \(address)")
         }
