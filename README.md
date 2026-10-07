@@ -20,7 +20,7 @@
 ## Features
 
 - **Flag and IP in the menu bar,** with a compact mode for small screens.
-- **Always current.** Rechecks on network changes, VPN on/off and every 5 minutes.
+- **Auto-refresh** of the IP and flag.
 - **Details on click.** Country, public IP, city and provider when available, local addresses. Click an address to copy it.
 - **Notifications.** Country change, IP change, connection loss, and a warning when traffic leaves through your home country — VPN may be off.
 - **Launch at login.**
@@ -41,12 +41,6 @@
 - **Home country alert:** turn off your VPN, open Settings → Notifications and pick the country you are in. You will be warned whenever your traffic goes out through it.
 
 ## FAQ
-
-**The IP differs from what website X shows.**
-Your VPN probably uses split tunneling: different sites go through different routes.
-
-**No city or provider in the menu.**
-They come from the backup service and appear only when it was used.
 
 **Only a flag, no IP.**
 That is the compact mode. Change it in Settings → General.
