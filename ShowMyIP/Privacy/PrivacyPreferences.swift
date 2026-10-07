@@ -4,6 +4,7 @@ struct PrivacyPreferences: Equatable, Sendable {
     enum Key {
         static let allowsHiding = "privacy.allowsHiding"
         static let hidesOnLaunch = "privacy.hidesOnLaunch"
+        static let hiddenStyle = "privacy.hiddenStyle"
     }
 
     private static let separators: Set<Character> = [".", ":"]
@@ -11,6 +12,7 @@ struct PrivacyPreferences: Equatable, Sendable {
 
     var allowsHiding = false
     var hidesOnLaunch = false
+    var hiddenStyle = HiddenStyle.animated
 
     static func masked(_ address: String) -> String {
         String(address.map { separators.contains($0) ? $0 : maskCharacter })
@@ -19,7 +21,8 @@ struct PrivacyPreferences: Equatable, Sendable {
     static func load(from defaults: UserDefaults) -> PrivacyPreferences {
         PrivacyPreferences(
             allowsHiding: defaults.bool(forKey: Key.allowsHiding),
-            hidesOnLaunch: defaults.bool(forKey: Key.hidesOnLaunch)
+            hidesOnLaunch: defaults.bool(forKey: Key.hidesOnLaunch),
+            hiddenStyle: defaults.string(forKey: Key.hiddenStyle).flatMap(HiddenStyle.init) ?? .animated
         )
     }
 }
