@@ -7,6 +7,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let menu = NSMenu()
     private let appState: AppState
     private let screenObserver: ScreenObserver
+    private let privacyState: PrivacyState
     private let notificationCoordinator: NotificationCoordinator
     private let settingsWindowController: SettingsWindowController
     private let defaults: UserDefaults
@@ -16,12 +17,14 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     init(
         appState: AppState,
         screenObserver: ScreenObserver,
+        privacyState: PrivacyState,
         notificationCoordinator: NotificationCoordinator,
         settingsWindowController: SettingsWindowController,
         defaults: UserDefaults = .standard
     ) {
         self.appState = appState
         self.screenObserver = screenObserver
+        self.privacyState = privacyState
         self.notificationCoordinator = notificationCoordinator
         self.settingsWindowController = settingsWindowController
         self.defaults = defaults
@@ -37,7 +40,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         let infoItems = MenuInfoBuilder.items(
             for: appState.status,
             localAddresses: appState.localAddresses,
-            locale: .current
+            locale: .current,
+            isHidden: privacyState.isHidden
         )
         infoItems.forEach { menu.addItem(makeInfoItem($0)) }
         menu.addItem(.separator())
@@ -63,6 +67,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
+                self?.privacyState.preferencesDidChange()
                 self?.renderLabel()
             }
         }
@@ -84,7 +89,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         let label = MenuBarLabel.make(
             for: appState.status,
             isCompact: settings.displayMode.isCompact(hasNotchedScreen: screenObserver.hasNotchedScreen),
-            compactStyle: settings.compactStyle
+            compactStyle: settings.compactStyle,
+            isHidden: privacyState.isHidden
         )
         apply(label)
     }
@@ -110,7 +116,11 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             return
         }
         lastHandledStatus = status
-        notificationCoordinator.handle(status, preferences: .load(from: defaults))
+        notificationCoordinator.handle(
+            status,
+            preferences: .load(from: defaults),
+            isHidden: privacyState.isHidden
+        )
     }
 
     private func makeInfoItem(_ info: MenuInfoItem) -> NSMenuItem {
@@ -130,6 +140,16 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     }
 
     @objc private func statusItemClicked() {
+        let modifiers = NSApplication.shared.currentEvent?.modifierFlags ?? []
+        switch StatusItemClick.action(modifiers: modifiers, allowsHiding: privacyState.allowsHiding) {
+        case .toggleHidden:
+            privacyState.toggle()
+        case .openMenu:
+            openMenu()
+        }
+    }
+
+    private func openMenu() {
         statusItem.menu = menu
         statusItem.button?.performClick(nil)
         statusItem.menu = nil

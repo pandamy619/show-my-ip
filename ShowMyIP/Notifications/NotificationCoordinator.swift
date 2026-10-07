@@ -11,11 +11,11 @@ final class NotificationCoordinator {
         self.locale = locale
     }
 
-    func handle(_ status: AppState.Status, preferences: NotificationPreferences) {
+    func handle(_ status: AppState.Status, preferences: NotificationPreferences, isHidden: Bool = false) {
         guard let notification = decider.process(status, preferences: preferences) else {
             return
         }
-        let content = NotificationContentBuilder.content(for: notification, locale: locale)
+        let content = NotificationContentBuilder.content(for: notification, locale: locale, isHidden: isHidden)
         let sender = sender
         Task {
             await sender.send(content)

@@ -7,7 +7,8 @@ enum MenuBarLabel: Equatable {
     static func make(
         for status: AppState.Status,
         isCompact: Bool = false,
-        compactStyle: CompactStyle = .flag
+        compactStyle: CompactStyle = .flag,
+        isHidden: Bool = false
     ) -> MenuBarLabel {
         switch status {
         case .loading:
@@ -17,16 +18,22 @@ enum MenuBarLabel: Equatable {
         case .failed:
             .symbol("exclamationmark.triangle")
         case .loaded(let info):
-            loadedLabel(for: info, isCompact: isCompact, compactStyle: compactStyle)
+            loadedLabel(for: info, isCompact: isCompact, compactStyle: compactStyle, isHidden: isHidden)
         }
     }
 
-    private static func loadedLabel(for info: IPInfo, isCompact: Bool, compactStyle: CompactStyle) -> MenuBarLabel {
+    private static func loadedLabel(
+        for info: IPInfo,
+        isCompact: Bool,
+        compactStyle: CompactStyle,
+        isHidden: Bool
+    ) -> MenuBarLabel {
+        let address = isHidden ? PrivacyPreferences.mask : info.address.value
         guard let country = info.country else {
-            return isCompact ? .text(unknownCountryEmoji) : .text("\(unknownCountryEmoji) \(info.address.value)")
+            return isCompact ? .text(unknownCountryEmoji) : .text("\(unknownCountryEmoji) \(address)")
         }
         guard isCompact else {
-            return .text("\(country.flagEmoji) \(info.address.value)")
+            return .text("\(country.flagEmoji) \(address)")
         }
         switch compactStyle {
         case .flag:

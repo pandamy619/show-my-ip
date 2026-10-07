@@ -3,6 +3,7 @@ import SwiftUI
 enum SettingsSection: String, CaseIterable, Identifiable {
     case general
     case notifications
+    case privacy
     case about
 
     var id: Self { self }
@@ -13,6 +14,8 @@ enum SettingsSection: String, CaseIterable, Identifiable {
             "General"
         case .notifications:
             "Notifications"
+        case .privacy:
+            "Privacy"
         case .about:
             "About"
         }
@@ -24,6 +27,8 @@ enum SettingsSection: String, CaseIterable, Identifiable {
             "gearshape.fill"
         case .notifications:
             "bell.badge.fill"
+        case .privacy:
+            "eye.slash.fill"
         case .about:
             "info"
         }
@@ -35,6 +40,8 @@ enum SettingsSection: String, CaseIterable, Identifiable {
             .gray
         case .notifications:
             .red
+        case .privacy:
+            .green
         case .about:
             .blue
         }
