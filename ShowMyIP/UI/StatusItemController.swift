@@ -3,6 +3,11 @@ import Observation
 
 @MainActor
 final class StatusItemController: NSObject, NSMenuDelegate {
+    private static let maskedFont = NSFont.monospacedSystemFont(
+        ofSize: NSFont.menuBarFont(ofSize: 0).pointSize,
+        weight: .regular
+    )
+
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let menu = NSMenu()
     private let appState: AppState
@@ -86,12 +91,17 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     private func renderLabel() {
         let visibleLabel = makeLabel(isHidden: false)
-        let shownLabel = privacyState.isHidden ? makeLabel(isHidden: true) : visibleLabel
+        guard privacyState.isHidden else {
+            apply(visibleLabel)
+            statusItem.length = NSStatusItem.variableLength
+            return
+        }
         apply(visibleLabel)
-        let visibleWidth = statusItem.button?.intrinsicContentSize.width ?? NSStatusItem.variableLength
-        apply(shownLabel)
-        // Keeps the menu bar item as wide as the real address so hiding it does not shift neighbouring icons.
-        statusItem.length = shownLabel == visibleLabel ? NSStatusItem.variableLength : visibleWidth
+        let visibleWidth = statusItem.button?.intrinsicContentSize.width ?? 0
+        apply(makeLabel(isHidden: true), isMasked: true)
+        let maskedWidth = statusItem.button?.intrinsicContentSize.width ?? 0
+        // Keeps the menu bar item at least as wide as the real address so hiding it does not shift neighbouring icons.
+        statusItem.length = max(visibleWidth, maskedWidth)
     }
 
     private func makeLabel(isHidden: Bool) -> MenuBarLabel {
@@ -104,11 +114,14 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         )
     }
 
-    private func apply(_ label: MenuBarLabel) {
+    private func apply(_ label: MenuBarLabel, isMasked: Bool = false) {
         guard let button = statusItem.button else {
             return
         }
         switch label {
+        case .text(let text) where isMasked:
+            button.image = nil
+            button.attributedTitle = NSAttributedString(string: text, attributes: [.font: Self.maskedFont])
         case .text(let text):
             button.image = nil
             button.title = text
