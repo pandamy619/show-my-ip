@@ -32,6 +32,8 @@ struct SettingsView: View {
             GeneralSettingsView()
         case .notifications:
             NotificationSettingsView(currentCountry: currentCountry, coordinator: notificationCoordinator)
+        case .privacy:
+            PrivacySettingsView()
         case .about:
             AboutSettingsView()
         }

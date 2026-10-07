@@ -3,7 +3,11 @@ import Foundation
 enum NotificationContentBuilder {
     private static let unknownCountry = "🌐 Unknown"
 
-    static func content(for notification: IPNotification, locale: Locale) -> NotificationContent {
+    static func content(
+        for notification: IPNotification,
+        locale: Locale,
+        isHidden: Bool = false
+    ) -> NotificationContent {
         switch notification {
         case .countryChanged(let from, let to):
             NotificationContent(
@@ -11,7 +15,10 @@ enum NotificationContentBuilder {
                 body: "\(countryName(from, locale: locale)) → \(countryName(to, locale: locale))"
             )
         case .addressChanged(let from, let to):
-            NotificationContent(title: "IP address changed", body: "\(from.value) → \(to.value)")
+            NotificationContent(
+                title: "IP address changed",
+                body: isHidden ? "Your public IP address has changed." : "\(from.value) → \(to.value)"
+            )
         case .homeCountryDetected(let country):
             NotificationContent(
                 title: "VPN may be off",

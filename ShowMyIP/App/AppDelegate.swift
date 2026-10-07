@@ -10,6 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         networkMonitor: NWPathNetworkMonitor()
     )
     private let screenObserver = ScreenObserver()
+    private let privacyState = PrivacyState()
     private let notificationCoordinator = NotificationCoordinator(sender: UserNotificationSender())
     private var statusItemController: StatusItemController?
 
@@ -21,6 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         statusItemController = StatusItemController(
             appState: appState,
             screenObserver: screenObserver,
+            privacyState: privacyState,
             notificationCoordinator: notificationCoordinator,
             settingsWindowController: settingsWindowController
         )

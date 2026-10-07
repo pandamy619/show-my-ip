@@ -13,11 +13,17 @@ struct MenuInfoItem: Equatable, Identifiable {
 }
 
 enum MenuInfoBuilder {
-    static func items(for status: AppState.Status, localAddresses: [LocalAddress], locale: Locale) -> [MenuInfoItem] {
-        statusItems(for: status, locale: locale) + localAddresses.map(localAddressItem)
+    static func items(
+        for status: AppState.Status,
+        localAddresses: [LocalAddress],
+        locale: Locale,
+        isHidden: Bool = false
+    ) -> [MenuInfoItem] {
+        statusItems(for: status, locale: locale, isHidden: isHidden)
+            + localAddresses.map { localAddressItem($0, isHidden: isHidden) }
     }
 
-    private static func statusItems(for status: AppState.Status, locale: Locale) -> [MenuInfoItem] {
+    private static func statusItems(for status: AppState.Status, locale: Locale, isHidden: Bool) -> [MenuInfoItem] {
         switch status {
         case .loading:
             [MenuInfoItem(title: "Loading…")]
@@ -26,18 +32,23 @@ enum MenuInfoBuilder {
         case .failed:
             [MenuInfoItem(title: "Could not determine public IP")]
         case .loaded(let info):
-            loadedItems(for: info, locale: locale)
+            loadedItems(for: info, locale: locale, isHidden: isHidden)
         }
     }
 
-    private static func loadedItems(for info: IPInfo, locale: Locale) -> [MenuInfoItem] {
+    private static func loadedItems(for info: IPInfo, locale: Locale, isHidden: Bool) -> [MenuInfoItem] {
         var items: [MenuInfoItem] = []
         if let country = info.country {
             let name = locale.localizedString(forRegionCode: country.value) ?? country.value
             items.append(MenuInfoItem(title: "\(country.flagEmoji) \(name)"))
         }
         let address = info.address.value
-        items.append(MenuInfoItem(title: "Public \(versionName(info.address.version)): \(address)", copyValue: address))
+        let shownAddress = isHidden ? PrivacyPreferences.mask : address
+        let title = "Public \(versionName(info.address.version)): \(shownAddress)"
+        items.append(MenuInfoItem(title: title, copyValue: address))
+        guard !isHidden else {
+            return items
+        }
         if let city = info.city {
             items.append(MenuInfoItem(title: "City: \(city)"))
         }
@@ -47,9 +58,10 @@ enum MenuInfoBuilder {
         return items
     }
 
-    private static func localAddressItem(_ local: LocalAddress) -> MenuInfoItem {
-        MenuInfoItem(
-            title: "Local IP (\(local.interfaceName)): \(local.address.value)",
+    private static func localAddressItem(_ local: LocalAddress, isHidden: Bool) -> MenuInfoItem {
+        let shownAddress = isHidden ? PrivacyPreferences.mask : local.address.value
+        return MenuInfoItem(
+            title: "Local IP (\(local.interfaceName)): \(shownAddress)",
             copyValue: local.address.value
         )
     }
