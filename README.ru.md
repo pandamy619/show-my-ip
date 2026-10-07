@@ -28,7 +28,7 @@
 
 ## Установка
 
-1. Скачайте `ShowMyIP.dmg` из [Releases](https://github.com/pandamy619/show-my-ip/releases).
+1. Скачайте [ShowMyIP.dmg](https://github.com/pandamy619/show-my-ip/releases/latest/download/ShowMyIP.dmg) из последнего [релиза](https://github.com/pandamy619/show-my-ip/releases).
 2. Перетащите **Show My IP** в **Программы**.
 3. Запустите. Приложение не подписано Apple, поэтому macOS заблокирует первый запуск: откройте **Системные настройки → Конфиденциальность и безопасность** и нажмите **Всё равно открыть**. Это нужно сделать один раз.
 
@@ -78,6 +78,7 @@ open ShowMyIP.xcodeproj
 | `make lint` | SwiftLint + swift-format, строгий режим |
 | `make format` | автоформатирование |
 | `make hooks` | линтер перед каждым коммитом |
+| `make release` | собрать `build/ShowMyIP.dmg` |
 
 Для `make lint` нужен SwiftLint: `brew install swiftlint`.
 

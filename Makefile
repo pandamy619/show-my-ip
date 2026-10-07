@@ -1,6 +1,6 @@
 SOURCES := ShowMyIP ShowMyIPTests
 
-.PHONY: lint format test hooks
+.PHONY: lint format test hooks release
 
 lint:
 	swiftlint lint --strict --quiet
@@ -15,3 +15,6 @@ test:
 
 hooks:
 	git config core.hooksPath scripts/git-hooks
+
+release:
+	./scripts/release.sh
