@@ -35,8 +35,16 @@ struct PrivacyMaskingTests {
         #expect(
             items == [
                 MenuInfoItem(title: "🇳🇱 Netherlands"),
-                MenuInfoItem(title: "Public IPv4: ***.**.**.**", copyValue: "185.23.45.67"),
-                MenuInfoItem(title: "Local IP (en0): ***.***.*.*", copyValue: "192.168.1.5"),
+                MenuInfoItem(
+                    title: "Public IPv4: ***.**.**.**",
+                    copyValue: "185.23.45.67",
+                    maskedSuffix: "***.**.**.**"
+                ),
+                MenuInfoItem(
+                    title: "Local IP (en0): ***.***.*.*",
+                    copyValue: "192.168.1.5",
+                    maskedSuffix: "***.***.*.*"
+                ),
             ]
         )
     }
@@ -60,5 +68,20 @@ struct PrivacyMaskingTests {
     ])
     func maskKeepsSeparators(address: String, expected: String) {
         #expect(PrivacyPreferences.masked(address) == expected)
+    }
+
+    @Test func visibleMenuItemsHaveNoMaskedPart() throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        let items = MenuInfoBuilder.items(for: .loaded(info), localAddresses: [], locale: locale)
+        #expect(items.allSatisfy { $0.maskedSuffix == nil })
+    }
+
+    @Test func maskedItemSplitsLabelAndMask() {
+        let item = MenuInfoItem(
+            title: "Public IPv4: ***.**.**.**",
+            copyValue: "185.23.45.67",
+            maskedSuffix: "***.**.**.**"
+        )
+        #expect(item.unmaskedPrefix == "Public IPv4: ")
     }
 }
