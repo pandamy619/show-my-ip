@@ -6,6 +6,7 @@
 - Public IPv4 and IPv6 at the same time; choose which one the menu bar shows.
 - Optional city and provider for every connection via ipinfo.io (off by default).
 - History of the last public IP changes in the menu, stored only on this Mac.
+- Network responses are now cut off as soon as they exceed the size limit instead of being downloaded in full.
 
 ## [0.1.0] — 2026-10-07
 
