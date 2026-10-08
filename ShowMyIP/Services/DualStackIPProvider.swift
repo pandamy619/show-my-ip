@@ -1,13 +1,22 @@
 struct DualStackIPProvider: IPProvider {
     private let ipv4: any IPProvider
     private let ipv6: any IPProvider
+    private let isIPv6Available: @Sendable () -> Bool
 
-    init(ipv4: any IPProvider, ipv6: any IPProvider) {
+    init(
+        ipv4: any IPProvider,
+        ipv6: any IPProvider,
+        isIPv6Available: @escaping @Sendable () -> Bool = { true }
+    ) {
         self.ipv4 = ipv4
         self.ipv6 = ipv6
+        self.isIPv6Available = isIPv6Available
     }
 
     func fetchIPInfo() async throws(IPProviderError) -> IPInfo {
+        guard isIPv6Available() else {
+            return try await ipv4.fetchIPInfo()
+        }
         async let ipv4Result = Self.result(of: ipv4)
         async let ipv6Result = Self.result(of: ipv6)
         let (primary, secondary) = await (ipv4Result, ipv6Result)

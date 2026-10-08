@@ -6,6 +6,10 @@ enum LocalAddressReader {
         LocalAddressFilter.displayable(readInterfaceAddresses())
     }
 
+    static func hasGlobalIPv6() -> Bool {
+        readInterfaceAddresses().contains { IPAddress($0.address)?.isGlobalIPv6 == true }
+    }
+
     private static func readInterfaceAddresses() -> [InterfaceAddress] {
         var head: UnsafeMutablePointer<ifaddrs>?
         guard getifaddrs(&head) == 0, let first = head else {
