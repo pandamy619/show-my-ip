@@ -36,6 +36,16 @@ struct DualStackIPProviderTests {
         }
     }
 
+    @Test func skipsIPv6WhenUnavailable() async throws {
+        let ipv4Info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        let ipv6 = StubIPProvider { () throws(IPProviderError) -> IPInfo in
+            Issue.record("IPv6 must not be requested")
+            throw .network
+        }
+        let provider = DualStackIPProvider(ipv4: StubIPProvider { ipv4Info }, ipv6: ipv6, isIPv6Available: { false })
+        #expect(try await provider.fetchIPInfo() == ipv4Info)
+    }
+
     @Test func ignoresNonIPv6SecondaryResult() async throws {
         let ipv4Info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
         let provider = DualStackIPProvider(ipv4: StubIPProvider { ipv4Info }, ipv6: StubIPProvider { ipv4Info })
