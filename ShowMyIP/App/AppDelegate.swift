@@ -2,12 +2,35 @@ import AppKit
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    private let appState = AppState(provider: AppDelegate.makeProvider(), networkMonitor: NWPathNetworkMonitor())
+    private let appState = AppDelegate.makeAppState()
     private let screenObserver = ScreenObserver()
     private let privacyState = PrivacyState()
-    private let history = IPHistory()
+    private let history = AppDelegate.makeHistory()
     private let notificationCoordinator = NotificationCoordinator(sender: UserNotificationSender())
     private var statusItemController: StatusItemController?
+
+    private static func makeAppState() -> AppState {
+        #if DEBUG
+            if DemoMode.isEnabled {
+                return AppState(
+                    provider: DemoIPProvider(),
+                    networkMonitor: NWPathNetworkMonitor(),
+                    readLocalAddresses: { DemoMode.localAddresses }
+                )
+            }
+        #endif
+        return AppState(provider: makeProvider(), networkMonitor: NWPathNetworkMonitor())
+    }
+
+    private static func makeHistory() -> IPHistory {
+        #if DEBUG
+            if DemoMode.isEnabled, let defaults = UserDefaults(suiteName: DemoMode.defaultsSuiteName) {
+                defaults.removePersistentDomain(forName: DemoMode.defaultsSuiteName)
+                return IPHistory(defaults: defaults)
+            }
+        #endif
+        return IPHistory()
+    }
 
     private static func makeProvider() -> any IPProvider {
         let ipInfo = IPInfoIOProvider(client: URLSessionHTTPClient())
