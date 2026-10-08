@@ -5,6 +5,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let appState = AppState(provider: AppDelegate.makeProvider(), networkMonitor: NWPathNetworkMonitor())
     private let screenObserver = ScreenObserver()
     private let privacyState = PrivacyState()
+    private let history = IPHistory()
     private let notificationCoordinator = NotificationCoordinator(sender: UserNotificationSender())
     private var statusItemController: StatusItemController?
 
@@ -41,7 +42,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             screenObserver: screenObserver,
             privacyState: privacyState,
             notificationCoordinator: notificationCoordinator,
-            settingsWindowController: settingsWindowController
+            settingsWindowController: settingsWindowController,
+            history: history
         )
         appState.start()
         screenObserver.start()

@@ -15,6 +15,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let spoilerView = SpoilerView()
     private let menu = NSMenu()
     private let infoItemFactory = InfoMenuItemFactory()
+    private let history: IPHistory
+    private let historyMenuFactory: HistoryMenuFactory
     private let appState: AppState
     private let screenObserver: ScreenObserver
     private let privacyState: PrivacyState
@@ -31,6 +33,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         privacyState: PrivacyState,
         notificationCoordinator: NotificationCoordinator,
         settingsWindowController: SettingsWindowController,
+        history: IPHistory,
         defaults: UserDefaults = .standard
     ) {
         self.appState = appState
@@ -38,6 +41,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         self.privacyState = privacyState
         self.notificationCoordinator = notificationCoordinator
         self.settingsWindowController = settingsWindowController
+        self.history = history
+        historyMenuFactory = HistoryMenuFactory(history: history, infoItemFactory: infoItemFactory)
         self.defaults = defaults
         showsLocationDetails = defaults.bool(forKey: SettingsKey.showsLocationDetails)
         super.init()
@@ -58,6 +63,10 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         let hiddenStyle = PrivacyPreferences.load(from: defaults).hiddenStyle
         infoItems.forEach { menu.addItem(infoItemFactory.makeItem($0, hiddenStyle: hiddenStyle)) }
         menu.addItem(.separator())
+        if history.isEnabled {
+            menu.addItem(historyMenuFactory.makeItem(isHidden: privacyState.isHidden, hiddenStyle: hiddenStyle))
+            menu.addItem(.separator())
+        }
         menu.addItem(makeActionItem(String(localized: "Refresh"), action: #selector(refresh), key: "r"))
         menu.addItem(makeActionItem(String(localized: "Settings…"), action: #selector(openSettings), key: ","))
         menu.addItem(.separator())
@@ -90,7 +99,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private func observeState() {
         withObservationTracking {
             renderLabel()
-            forwardStatusToNotifications()
+            statusDidChange()
         } onChange: { [weak self] in
             Task { @MainActor in
                 self?.observeState()
@@ -183,12 +192,15 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         spoilerView.isHidden = false
     }
 
-    private func forwardStatusToNotifications() {
+    private func statusDidChange() {
         let status = appState.status
         guard status != lastHandledStatus else {
             return
         }
         lastHandledStatus = status
+        if case .loaded(let info) = status {
+            history.record(info, at: Date())
+        }
         notificationCoordinator.handle(
             status,
             preferences: .load(from: defaults),
@@ -220,6 +232,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     private func defaultsDidChange() {
         privacyState.preferencesDidChange()
+        history.preferencesDidChange()
         renderLabel()
         let shows = defaults.bool(forKey: SettingsKey.showsLocationDetails)
         guard shows != showsLocationDetails else {
