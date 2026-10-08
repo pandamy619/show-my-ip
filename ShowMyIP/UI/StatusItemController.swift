@@ -9,13 +9,12 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     )
 
     private static let regularFont = NSFont.menuBarFont(ofSize: 0)
-    private static let menuFont = NSFont.menuFont(ofSize: 0)
-    private static let maskedMenuFont = NSFont.monospacedSystemFont(ofSize: menuFont.pointSize, weight: .regular)
     private static let spoilerHeight: CGFloat = 16
 
     private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     private let spoilerView = SpoilerView()
     private let menu = NSMenu()
+    private let infoItemFactory = InfoMenuItemFactory()
     private let appState: AppState
     private let screenObserver: ScreenObserver
     private let privacyState: PrivacyState
@@ -56,7 +55,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             locale: .current,
             isHidden: privacyState.isHidden
         )
-        infoItems.forEach { menu.addItem(makeInfoItem($0)) }
+        let hiddenStyle = PrivacyPreferences.load(from: defaults).hiddenStyle
+        infoItems.forEach { menu.addItem(infoItemFactory.makeItem($0, hiddenStyle: hiddenStyle)) }
         menu.addItem(.separator())
         menu.addItem(makeActionItem(String(localized: "Refresh"), action: #selector(refresh), key: "r"))
         menu.addItem(makeActionItem(String(localized: "Settings…"), action: #selector(openSettings), key: ","))
@@ -196,41 +196,6 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         )
     }
 
-    private func makeInfoItem(_ info: MenuInfoItem) -> NSMenuItem {
-        let item = NSMenuItem(title: info.title, action: nil, keyEquivalent: "")
-        if let copyValue = info.copyValue {
-            item.action = #selector(copyToPasteboard(_:))
-            item.target = self
-            item.representedObject = copyValue
-        }
-        if let mask = info.maskedSuffix {
-            decorateMaskedItem(item, info: info, mask: mask)
-        }
-        return item
-    }
-
-    private func decorateMaskedItem(_ item: NSMenuItem, info: MenuInfoItem, mask: String) {
-        let style = PrivacyPreferences.load(from: defaults).hiddenStyle
-        guard style.usesSpoiler else {
-            let title = NSMutableAttributedString(string: info.unmaskedPrefix, attributes: [.font: Self.menuFont])
-            title.append(NSAttributedString(string: mask, attributes: [.font: Self.maskedMenuFont]))
-            item.attributedTitle = title
-            return
-        }
-        let copyValue = info.copyValue
-        item.view = SpoilerMenuItemView(
-            prefix: info.unmaskedPrefix,
-            maskedText: mask,
-            style: style,
-            font: Self.menuFont,
-            maskFont: Self.maskedMenuFont
-        ) { [weak self] in
-            if let copyValue {
-                self?.copy(copyValue)
-            }
-        }
-    }
-
     private func makeActionItem(_ title: String, action: Selector, key: String) -> NSMenuItem {
         let item = NSMenuItem(title: title, action: action, keyEquivalent: key)
         item.target = self
@@ -251,18 +216,6 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         statusItem.menu = menu
         statusItem.button?.performClick(nil)
         statusItem.menu = nil
-    }
-
-    @objc private func copyToPasteboard(_ sender: NSMenuItem) {
-        guard let value = sender.representedObject as? String else {
-            return
-        }
-        copy(value)
-    }
-
-    private func copy(_ value: String) {
-        NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(value, forType: .string)
     }
 
     private func defaultsDidChange() {
