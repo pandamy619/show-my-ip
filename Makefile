@@ -11,7 +11,8 @@ format:
 	swiftlint lint --fix --quiet
 
 test:
-	xcodebuild test -project ShowMyIP.xcodeproj -scheme ShowMyIP -destination 'platform=macOS,arch=arm64' -quiet
+	xcodebuild test -project ShowMyIP.xcodeproj -scheme ShowMyIP -destination 'platform=macOS,arch=arm64' \
+		-testLanguage en -testRegion US -quiet
 
 hooks:
 	git config core.hooksPath scripts/git-hooks
