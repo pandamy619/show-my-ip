@@ -26,6 +26,8 @@ struct LocalizationTests {
         ("Privacy", "Приватность"),
         ("Address", "Адрес"),
         ("Show city and provider", "Показывать город и провайдера"),
+        ("History", "История"),
+        ("Keep IP history", "Вести историю IP"),
     ])
     func translatesToRussian(key: String, expected: String) throws {
         #expect(try Self.russianTable()[key] == expected)
