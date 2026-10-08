@@ -3,9 +3,21 @@ import AppKit
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private let appState = AppState(
-        provider: FallbackIPProvider(
-            primary: CloudflareIPProvider(client: URLSessionHTTPClient()),
-            fallbacks: [IPInfoIOProvider(client: URLSessionHTTPClient())]
+        provider: DualStackIPProvider(
+            ipv4: FallbackIPProvider(
+                primary: CloudflareIPProvider(
+                    client: URLSessionHTTPClient(),
+                    traceAddress: CloudflareIPProvider.ipv4TraceAddress
+                ),
+                fallbacks: [
+                    CloudflareIPProvider(client: URLSessionHTTPClient()),
+                    IPInfoIOProvider(client: URLSessionHTTPClient()),
+                ]
+            ),
+            ipv6: CloudflareIPProvider(
+                client: URLSessionHTTPClient(timeout: 5),
+                traceAddress: CloudflareIPProvider.ipv6TraceAddress
+            )
         ),
         networkMonitor: NWPathNetworkMonitor()
     )

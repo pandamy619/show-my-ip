@@ -11,6 +11,16 @@
         }
       }
     },
+    "Address" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Адрес"
+          }
+        }
+      }
+    },
     "Allow Show My IP in System Settings to start it at login." : {
       "localizations" : {
         "ru" : {
@@ -287,6 +297,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "IP-адрес изменился"
+          }
+        }
+      }
+    },
+    "If your network has no IPv6, the menu bar shows IPv4." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Если в сети нет IPv6, в строке меню показывается IPv4."
           }
         }
       }

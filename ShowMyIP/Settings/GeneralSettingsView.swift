@@ -3,6 +3,7 @@ import SwiftUI
 struct GeneralSettingsView: View {
     @AppStorage(SettingsKey.displayMode) private var displayMode: DisplayMode = .automatic
     @AppStorage(SettingsKey.compactStyle) private var compactStyle: CompactStyle = .flag
+    @AppStorage(SettingsKey.menuBarAddress) private var menuBarAddress: MenuBarAddress = .ipv4
     @State private var launchAtLogin = LaunchAtLoginController(service: MainAppLoginItemService())
 
     var body: some View {
@@ -35,6 +36,15 @@ struct GeneralSettingsView: View {
                     }
                 }
                 Text("Automatic uses the compact style when a screen with a notch is connected.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                Picker("Address", selection: $menuBarAddress) {
+                    ForEach(MenuBarAddress.allCases) { address in
+                        Text(address.title).tag(address)
+                    }
+                }
+                .pickerStyle(.segmented)
+                Text("If your network has no IPv6, the menu bar shows IPv4.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
