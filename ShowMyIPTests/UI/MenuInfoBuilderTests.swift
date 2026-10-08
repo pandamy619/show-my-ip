@@ -29,6 +29,18 @@ struct MenuInfoBuilderTests {
         #expect(items(for: .loaded(info)) == [expected])
     }
 
+    @Test func dualStackShowsBothPublicAddresses() throws {
+        let ipv4 = try #require(IPAddress("185.23.45.67"))
+        let ipv6 = try #require(IPAddress("2a01:4f8:c0c:1::1"))
+        let info = IPInfo(address: ipv4, country: nil, secondaryAddress: ipv6)
+        #expect(
+            items(for: .loaded(info)) == [
+                MenuInfoItem(title: "Public IPv4: 185.23.45.67", copyValue: "185.23.45.67"),
+                MenuInfoItem(title: "Public IPv6: 2a01:4f8:c0c:1::1", copyValue: "2a01:4f8:c0c:1::1"),
+            ]
+        )
+    }
+
     @Test func statusMessagesForNonLoadedStates() {
         #expect(items(for: .loading) == [MenuInfoItem(title: "Loading…")])
         #expect(items(for: .offline) == [MenuInfoItem(title: "No network connection")])

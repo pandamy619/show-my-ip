@@ -28,6 +28,26 @@ struct CloudflareIPProviderTests {
         _ = try await provider.fetchIPInfo()
     }
 
+    @Test(arguments: [
+        CloudflareIPProvider.ipv4TraceAddress,
+        CloudflareIPProvider.ipv6TraceAddress,
+    ])
+    func requestsGivenTraceAddress(address: String) async throws {
+        let provider = CloudflareIPProvider(
+            client: StubHTTPClient { url in
+                #expect(url.absoluteString == address)
+                return HTTPResponse(statusCode: 200, body: Self.sampleTrace)
+            },
+            traceAddress: address
+        )
+        _ = try await provider.fetchIPInfo()
+    }
+
+    @Test func pinsTraceAddressesToAddressFamilies() {
+        #expect(CloudflareIPProvider.ipv4TraceAddress == "https://1.1.1.1/cdn-cgi/trace")
+        #expect(CloudflareIPProvider.ipv6TraceAddress == "https://[2606:4700:4700::1111]/cdn-cgi/trace")
+    }
+
     @Test func nonSuccessStatusThrows() async {
         await #expect(throws: IPProviderError.unexpectedStatus(503)) {
             try await makeProvider(statusCode: 503).fetchIPInfo()
