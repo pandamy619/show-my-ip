@@ -21,7 +21,7 @@
 
 - **Flag and IP in the menu bar,** with a compact mode for small screens.
 - **Auto-refresh** of the IP and flag.
-- **Details on click.** Country, public IPv4 and IPv6, city and provider when available, local addresses. Click an address to copy it.
+- **Details on click.** Country, public IPv4 and IPv6, local addresses, and optionally city and provider. Click an address to copy it.
 - **Notifications.** Country change, IP change, connection loss, and a warning when traffic leaves through your home country — VPN may be off.
 - **Launch at login.**
 - **English and Russian** interface.
