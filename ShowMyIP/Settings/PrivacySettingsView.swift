@@ -13,6 +13,7 @@ struct PrivacySettingsView: View {
     @AppStorage(Key.allowsHiding) private var allowsHiding = false
     @AppStorage(Key.hidesOnLaunch) private var hidesOnLaunch = false
     @AppStorage(Key.hiddenStyle) private var hiddenStyle = HiddenStyle.animated
+    @AppStorage(SettingsKey.keepsHistory) private var keepsHistory = true
 
     var body: some View {
         Form {
@@ -33,6 +34,12 @@ struct PrivacySettingsView: View {
                 Text(Self.footer)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+            }
+            Section {
+                Toggle(isOn: $keepsHistory) {
+                    Text("Keep IP history")
+                    Text("Stores up to 50 recent addresses on this Mac. Turning it off erases the history.")
+                }
             }
         }
         .formStyle(.grouped)

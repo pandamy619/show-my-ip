@@ -91,6 +91,16 @@
         }
       }
     },
+    "Clear History" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Очистить историю"
+          }
+        }
+      }
+    },
     "Compact" : {
       "localizations" : {
         "ru" : {
@@ -261,6 +271,16 @@
         }
       }
     },
+    "History" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "История"
+          }
+        }
+      }
+    },
     "Home country" : {
       "localizations" : {
         "ru" : {
@@ -307,6 +327,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Если в сети нет IPv6, в строке меню показывается IPv4."
+          }
+        }
+      }
+    },
+    "Keep IP history" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вести историю IP"
           }
         }
       }
@@ -367,6 +397,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Строка меню"
+          }
+        }
+      }
+    },
+    "No changes yet" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменений пока нет"
           }
         }
       }
@@ -587,6 +627,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Статичный спойлер"
+          }
+        }
+      }
+    },
+    "Stores up to 50 recent addresses on this Mac. Turning it off erases the history." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Хранит до 50 последних адресов на этом Mac. При выключении история стирается."
           }
         }
       }
