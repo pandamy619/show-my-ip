@@ -4,6 +4,7 @@
 
 - Russian localization.
 - Public IPv4 and IPv6 at the same time; choose which one the menu bar shows.
+- Optional city and provider for every connection via ipinfo.io (off by default).
 
 ## [0.1.0] — 2026-10-07
 
