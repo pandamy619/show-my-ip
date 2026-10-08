@@ -5,6 +5,7 @@ SOURCES := ShowMyIP ShowMyIPTests
 lint:
 	swiftlint lint --strict --quiet
 	xcrun swift-format lint --strict --recursive $(SOURCES)
+	python3 scripts/check_translations.py
 
 format:
 	xcrun swift-format format --in-place --recursive $(SOURCES)
