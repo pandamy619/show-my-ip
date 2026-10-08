@@ -122,6 +122,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             for: appState.status,
             isCompact: settings.displayMode.isCompact(hasNotchedScreen: screenObserver.hasNotchedScreen),
             compactStyle: settings.compactStyle,
+            preferredVersion: settings.menuBarAddress.version,
             isHidden: isHidden
         )
     }

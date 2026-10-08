@@ -51,10 +51,7 @@ enum MenuInfoBuilder {
             let name = locale.localizedString(forRegionCode: country.value) ?? country.value
             items.append(MenuInfoItem(title: "\(country.flagEmoji) \(name)"))
         }
-        let address = info.address.value
-        let mask = isHidden ? PrivacyPreferences.masked(address) : nil
-        let title = String(localized: "Public \(versionName(info.address.version)): \(mask ?? address)")
-        items.append(MenuInfoItem(title: title, copyValue: address, maskedSuffix: mask))
+        items += info.addresses.map { publicAddressItem($0, isHidden: isHidden) }
         guard !isHidden else {
             return items
         }
@@ -65,6 +62,15 @@ enum MenuInfoBuilder {
             items.append(MenuInfoItem(title: String(localized: "Provider: \(organization)")))
         }
         return items
+    }
+
+    private static func publicAddressItem(_ address: IPAddress, isHidden: Bool) -> MenuInfoItem {
+        let mask = isHidden ? PrivacyPreferences.masked(address.value) : nil
+        return MenuInfoItem(
+            title: String(localized: "Public \(versionName(address.version)): \(mask ?? address.value)"),
+            copyValue: address.value,
+            maskedSuffix: mask
+        )
     }
 
     private static func localAddressItem(_ local: LocalAddress, isHidden: Bool) -> MenuInfoItem {

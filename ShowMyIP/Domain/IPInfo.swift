@@ -1,13 +1,39 @@
 struct IPInfo: Equatable, Sendable {
     let address: IPAddress
+    let secondaryAddress: IPAddress?
     let country: CountryCode?
     let city: String?
     let organization: String?
 
-    init(address: IPAddress, country: CountryCode?, city: String? = nil, organization: String? = nil) {
+    init(
+        address: IPAddress,
+        country: CountryCode?,
+        city: String? = nil,
+        organization: String? = nil,
+        secondaryAddress: IPAddress? = nil
+    ) {
         self.address = address
+        self.secondaryAddress = secondaryAddress
         self.country = country
         self.city = city
         self.organization = organization
+    }
+
+    var addresses: [IPAddress] {
+        [address] + (secondaryAddress.map { [$0] } ?? [])
+    }
+
+    func address(of version: IPAddress.Version) -> IPAddress? {
+        addresses.first { $0.version == version }
+    }
+
+    func withSecondaryAddress(_ secondaryAddress: IPAddress) -> IPInfo {
+        IPInfo(
+            address: address,
+            country: country,
+            city: city,
+            organization: organization,
+            secondaryAddress: secondaryAddress
+        )
     }
 }
