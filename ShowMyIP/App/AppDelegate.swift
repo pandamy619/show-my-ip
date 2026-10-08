@@ -17,7 +17,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             ipv6: CloudflareIPProvider(
                 client: URLSessionHTTPClient(timeout: 5),
                 traceAddress: CloudflareIPProvider.ipv6TraceAddress
-            )
+            ),
+            isIPv6Available: LocalAddressReader.hasGlobalIPv6
         ),
         networkMonitor: NWPathNetworkMonitor()
     )
