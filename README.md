@@ -15,7 +15,7 @@
 
 <p align="center"><a href="README.ru.md">Русская версия</a></p>
 
-<!-- Screenshots: compact menu bar, full menu bar, open menu, notification -->
+<p align="center"><img src="docs/images/hero.png" width="480" alt="Menu bar item with the open menu"></p>
 
 ## Features
 
@@ -23,10 +23,13 @@
 - **Auto-refresh** of the IP and flag.
 - **Details on click.** Country, public IPv4 and IPv6, local addresses, and optionally city and provider. Click an address to copy it.
 - **History** of recent IP changes, kept only on your Mac.
+- **Privacy mode.** ⌥-click the icon to hide the IP behind a spoiler — handy on calls and in cafés.
 - **Notifications.** Country change, IP change, connection loss, and a warning when traffic leaves through your home country — VPN may be off.
 - **Launch at login.**
 - **English and Russian** interface.
 - **Private by design.** No analytics, no third-party dependencies, sandboxed.
+
+<p align="center"><img src="docs/images/privacy.gif" width="420" alt="Hiding the IP with Option-click"></p>
 
 ## Installation
 
@@ -37,10 +40,15 @@
 ## Usage
 
 - Click the flag to see details and copy addresses.
+- ⌥-click the flag to hide or show the IP (turn it on in Settings → Privacy).
 - **Settings** (⌘,):
-  - **General** — launch at login, display mode (Automatic / Compact / Full), compact style.
+  - **General** — launch at login, display mode (Automatic / Compact / Full), compact style, IPv4 or IPv6 in the menu bar, city and provider.
   - **Notifications** — what to notify about and your home country.
+  - **Privacy** — IP hiding, hidden IP style, IP history.
 - **Home country alert:** turn off your VPN, open Settings → Notifications and pick the country you are in. You will be warned whenever your traffic goes out through it.
+
+<p align="center"><img src="docs/images/notification.png" width="480" alt="Country change notification"></p>
+<p align="center"><img src="docs/images/settings.png" width="560" alt="Privacy settings"></p>
 
 ## FAQ
 
@@ -55,12 +63,17 @@ Quit the app and move it from Applications to the Trash.
 
 ## Privacy
 
-The app makes two kinds of HTTPS requests and nothing else:
+The app makes only these HTTPS requests:
 
 | Service | When | Data received |
 |---|---|---|
-| `www.cloudflare.com/cdn-cgi/trace` | every refresh | IP, country |
+| `1.1.1.1/cdn-cgi/trace` | every refresh | IPv4, country |
+| `[2606:4700:4700::1111]/cdn-cgi/trace` | every refresh, if your Mac has IPv6 | IPv6 |
+| `www.cloudflare.com/cdn-cgi/trace` | only if the request above fails | IP, country |
 | `ipinfo.io/json` | only if Cloudflare fails | IP, country, city, provider |
+| `ipinfo.io/<your IP>/json` | only with “Show city and provider” on, once per new IP | city, provider |
+
+IP history is stored only on your Mac.
 
 Responses are validated before use. The IP is logged as private and never appears in system logs in plain text. The app runs in the App Sandbox with Hardened Runtime and only the outgoing network entitlement.
 
@@ -90,6 +103,8 @@ ShowMyIP/
   Domain/         validated models: IP address, country code, IP info
   Services/       HTTP client, IP providers, network monitor
   Notifications/  notification rules and delivery
+  Privacy/        IP hiding and spoiler effect
+  History/        IP change history
   Settings/       settings window, launch at login
   UI/             menu bar label, menu, display modes
 ShowMyIPTests/    tests mirroring the app structure
