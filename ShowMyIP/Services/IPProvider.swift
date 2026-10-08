@@ -10,3 +10,7 @@ enum IPProviderError: Error, Equatable {
 protocol IPProvider: Sendable {
     func fetchIPInfo() async throws(IPProviderError) -> IPInfo
 }
+
+protocol IPDetailsProvider: Sendable {
+    func fetchDetails(for address: IPAddress) async throws(IPProviderError) -> IPInfo
+}

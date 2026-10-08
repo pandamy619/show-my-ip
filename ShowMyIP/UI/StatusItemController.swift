@@ -24,6 +24,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let defaults: UserDefaults
     private var lastHandledStatus: AppState.Status?
     private var defaultsObserver: (any NSObjectProtocol)?
+    private var showsLocationDetails: Bool
 
     init(
         appState: AppState,
@@ -39,6 +40,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         self.notificationCoordinator = notificationCoordinator
         self.settingsWindowController = settingsWindowController
         self.defaults = defaults
+        showsLocationDetails = defaults.bool(forKey: SettingsKey.showsLocationDetails)
         super.init()
         menu.delegate = self
         configureButton()
@@ -80,8 +82,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
-                self?.privacyState.preferencesDidChange()
-                self?.renderLabel()
+                self?.defaultsDidChange()
             }
         }
     }
@@ -262,6 +263,17 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private func copy(_ value: String) {
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(value, forType: .string)
+    }
+
+    private func defaultsDidChange() {
+        privacyState.preferencesDidChange()
+        renderLabel()
+        let shows = defaults.bool(forKey: SettingsKey.showsLocationDetails)
+        guard shows != showsLocationDetails else {
+            return
+        }
+        showsLocationDetails = shows
+        refresh()
     }
 
     @objc private func refresh() {

@@ -4,6 +4,7 @@ struct GeneralSettingsView: View {
     @AppStorage(SettingsKey.displayMode) private var displayMode: DisplayMode = .automatic
     @AppStorage(SettingsKey.compactStyle) private var compactStyle: CompactStyle = .flag
     @AppStorage(SettingsKey.menuBarAddress) private var menuBarAddress: MenuBarAddress = .ipv4
+    @AppStorage(SettingsKey.showsLocationDetails) private var showsLocationDetails = false
     @State private var launchAtLogin = LaunchAtLoginController(service: MainAppLoginItemService())
 
     var body: some View {
@@ -47,6 +48,12 @@ struct GeneralSettingsView: View {
                 Text("If your network has no IPv6, the menu bar shows IPv4.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+            }
+            Section("Menu") {
+                Toggle(isOn: $showsLocationDetails) {
+                    Text("Show city and provider")
+                    Text("Sends your IP address to ipinfo.io.")
+                }
             }
         }
         .formStyle(.grouped)

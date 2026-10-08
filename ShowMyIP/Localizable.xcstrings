@@ -351,6 +351,16 @@
         }
       }
     },
+    "Menu" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Меню"
+          }
+        }
+      }
+    },
     "Menu bar" : {
       "localizations" : {
         "ru" : {
@@ -501,6 +511,16 @@
         }
       }
     },
+    "Sends your IP address to ipinfo.io." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отправляет ваш IP-адрес на ipinfo.io."
+          }
+        }
+      }
+    },
     "Settings…" : {
       "localizations" : {
         "ru" : {
@@ -527,6 +547,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Настройки Show My IP"
+          }
+        }
+      }
+    },
+    "Show city and provider" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показывать город и провайдера"
           }
         }
       }
