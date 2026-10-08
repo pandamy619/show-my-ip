@@ -9,7 +9,9 @@ extension HTTPClient {
         }
         let response: HTTPResponse
         do {
-            response = try await get(url)
+            response = try await get(url, maximumSize: maximumSize)
+        } catch HTTPClientError.responseTooLarge {
+            throw .responseTooLarge
         } catch {
             throw .network
         }
