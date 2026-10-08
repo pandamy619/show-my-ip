@@ -24,6 +24,7 @@
 - **Details on click.** Country, public IP, city and provider when available, local addresses. Click an address to copy it.
 - **Notifications.** Country change, IP change, connection loss, and a warning when traffic leaves through your home country — VPN may be off.
 - **Launch at login.**
+- **English and Russian** interface.
 - **Private by design.** No analytics, no third-party dependencies, sandboxed.
 
 ## Installation
