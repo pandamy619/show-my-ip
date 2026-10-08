@@ -26,6 +26,22 @@ struct IPInfoIOProviderTests {
         _ = try await provider.fetchIPInfo()
     }
 
+    @Test(arguments: [
+        ("185.23.45.67", "https://ipinfo.io/185.23.45.67/json"),
+        ("2a01:4f8:c0c:1::1", "https://ipinfo.io/2a01:4f8:c0c:1::1/json"),
+    ])
+    func requestsDetailsForGivenAddress(rawAddress: String, expectedURL: String) async throws {
+        let address = try #require(IPAddress(rawAddress))
+        let provider = IPInfoIOProvider(
+            client: StubHTTPClient { url in
+                #expect(url.absoluteString == expectedURL)
+                return HTTPResponse(statusCode: 200, body: Data(#"{"ip": "\#(rawAddress)", "city": "Amsterdam"}"#.utf8))
+            }
+        )
+        let info = try await provider.fetchDetails(for: address)
+        #expect(info.city == "Amsterdam")
+    }
+
     @Test func rateLimitStatusThrows() async {
         await #expect(throws: IPProviderError.unexpectedStatus(429)) {
             try await makeProvider(statusCode: 429).fetchIPInfo()
