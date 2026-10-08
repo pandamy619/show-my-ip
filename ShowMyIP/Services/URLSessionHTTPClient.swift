@@ -8,8 +8,7 @@ struct URLSessionHTTPClient: HTTPClient {
 
     private let session: URLSession
 
-    init(timeout: TimeInterval = 10) {
-        let configuration = URLSessionConfiguration.ephemeral
+    init(timeout: TimeInterval = 10, configuration: URLSessionConfiguration = .ephemeral) {
         configuration.timeoutIntervalForRequest = timeout
         configuration.timeoutIntervalForResource = timeout
         configuration.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
@@ -19,14 +18,24 @@ struct URLSessionHTTPClient: HTTPClient {
         session = URLSession(configuration: configuration)
     }
 
-    func get(_ url: URL) async throws -> HTTPResponse {
+    func get(_ url: URL, maximumSize: Int) async throws -> HTTPResponse {
         guard url.scheme == "https" else {
             throw ClientError.insecureURL
         }
-        let (data, response) = try await session.data(from: url)
+        let (bytes, response) = try await session.bytes(from: url)
         guard let httpResponse = response as? HTTPURLResponse else {
             throw ClientError.nonHTTPResponse
         }
-        return HTTPResponse(statusCode: httpResponse.statusCode, body: data)
+        guard httpResponse.expectedContentLength <= Int64(maximumSize) else {
+            throw HTTPClientError.responseTooLarge
+        }
+        var body = Data()
+        for try await byte in bytes {
+            guard body.count < maximumSize else {
+                throw HTTPClientError.responseTooLarge
+            }
+            body.append(byte)
+        }
+        return HTTPResponse(statusCode: httpResponse.statusCode, body: body)
     }
 }

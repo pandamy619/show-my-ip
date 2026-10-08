@@ -5,6 +5,10 @@ struct HTTPResponse: Sendable {
     let body: Data
 }
 
+enum HTTPClientError: Error, Equatable {
+    case responseTooLarge
+}
+
 protocol HTTPClient: Sendable {
-    func get(_ url: URL) async throws -> HTTPResponse
+    func get(_ url: URL, maximumSize: Int) async throws -> HTTPResponse
 }
