@@ -36,4 +36,16 @@ struct IPAddressTests {
         let overlong = String(repeating: "1:", count: 23)
         #expect(IPAddress(overlong) == nil)
     }
+
+    @Test(arguments: [
+        ("2a01:4f8:c0c:1::1", true),
+        ("3fff::1", true),
+        ("fe80::1", false),
+        ("fd12:3456::1", false),
+        ("::1", false),
+        ("185.23.45.67", false),
+    ])
+    func detectsGlobalIPv6(address: String, isGlobal: Bool) throws {
+        #expect(try #require(IPAddress(address)).isGlobalIPv6 == isGlobal)
+    }
 }
