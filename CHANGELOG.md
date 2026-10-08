@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Russian localization.
+- Public IPv4 and IPv6 at the same time; choose which one the menu bar shows.
 
 ## [0.1.0] — 2026-10-07
 
