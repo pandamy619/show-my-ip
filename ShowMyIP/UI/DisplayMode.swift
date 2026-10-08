@@ -8,11 +8,11 @@ enum DisplayMode: String, CaseIterable, Identifiable, Sendable {
     var title: String {
         switch self {
         case .automatic:
-            "Automatic"
+            String(localized: "Automatic")
         case .compact:
-            "Compact"
+            String(localized: "Compact")
         case .full:
-            "Full"
+            String(localized: "Full")
         }
     }
 

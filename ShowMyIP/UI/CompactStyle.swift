@@ -7,9 +7,9 @@ enum CompactStyle: String, CaseIterable, Identifiable, Sendable {
     var title: String {
         switch self {
         case .flag:
-            "Flag"
+            String(localized: "Flag")
         case .flagAndCountryCode:
-            "Flag and Country Code"
+            String(localized: "Flag and Country Code")
         }
     }
 }

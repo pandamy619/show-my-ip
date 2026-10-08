@@ -9,13 +9,13 @@ enum HiddenStyle: String, CaseIterable, Identifiable, Sendable {
     var title: String {
         switch self {
         case .animated:
-            "Animated spoiler"
+            String(localized: "Animated spoiler")
         case .still:
-            "Still spoiler"
+            String(localized: "Still spoiler")
         case .animatedOnHover:
-            "Spoiler, animated on hover"
+            String(localized: "Spoiler, animated on hover")
         case .asterisks:
-            "Asterisks"
+            String(localized: "Asterisks")
         }
     }
 

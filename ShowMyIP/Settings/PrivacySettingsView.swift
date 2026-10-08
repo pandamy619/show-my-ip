@@ -3,10 +3,12 @@ import SwiftUI
 struct PrivacySettingsView: View {
     typealias Key = PrivacyPreferences.Key
 
-    private static let footer = """
-        While hidden, the address in the menu bar is covered by the chosen style, and addresses in the menu \
-        and notifications are masked, for example ***.**.**.**. Clicking an address in the menu still copies it.
-        """
+    private static let footer = String(
+        localized: """
+            While hidden, addresses in the menu bar and menu are covered by the chosen style, \
+            and notifications don't show them. Clicking an address in the menu still copies it.
+            """
+    )
 
     @AppStorage(Key.allowsHiding) private var allowsHiding = false
     @AppStorage(Key.hidesOnLaunch) private var hidesOnLaunch = false

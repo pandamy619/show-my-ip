@@ -1,0 +1,636 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "About" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "О программе"
+          }
+        }
+      }
+    },
+    "Allow Show My IP in System Settings to start it at login." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Разрешите запуск Show My IP при входе в Системных настройках."
+          }
+        }
+      }
+    },
+    "Allow hiding IP" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Разрешить скрытие IP"
+          }
+        }
+      }
+    },
+    "Animated spoiler" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Анимированный спойлер"
+          }
+        }
+      }
+    },
+    "Asterisks" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Звёздочки"
+          }
+        }
+      }
+    },
+    "Automatic" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Автоматически"
+          }
+        }
+      }
+    },
+    "Automatic uses the compact style when a screen with a notch is connected." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "В автоматическом режиме компактный вид включается, когда подключён экран с вырезом."
+          }
+        }
+      }
+    },
+    "City: %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Город: %@"
+          }
+        }
+      }
+    },
+    "Compact" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Компактно"
+          }
+        }
+      }
+    },
+    "Compact style" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Компактный вид"
+          }
+        }
+      }
+    },
+    "Connection loss" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Потере соединения"
+          }
+        }
+      }
+    },
+    "Connection lost" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Соединение потеряно"
+          }
+        }
+      }
+    },
+    "Could not change the login item. Move the app to Applications and try again." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось изменить объект входа. Переместите приложение в папку «Программы» и попробуйте снова."
+          }
+        }
+      }
+    },
+    "Could not determine public IP" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось определить публичный IP"
+          }
+        }
+      }
+    },
+    "Country change" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Смене страны"
+          }
+        }
+      }
+    },
+    "Country changed" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Страна изменилась"
+          }
+        }
+      }
+    },
+    "Display" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отображение"
+          }
+        }
+      }
+    },
+    "Enable notifications" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Включить уведомления"
+          }
+        }
+      }
+    },
+    "Flag" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Флаг"
+          }
+        }
+      }
+    },
+    "Flag and Country Code" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Флаг и код страны"
+          }
+        }
+      }
+    },
+    "Full" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Полностью"
+          }
+        }
+      }
+    },
+    "General" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Основные"
+          }
+        }
+      }
+    },
+    "GitHub" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub"
+          }
+        }
+      }
+    },
+    "Hidden IP style" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Стиль скрытого IP"
+          }
+        }
+      }
+    },
+    "Hide IP on launch" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скрывать IP при запуске"
+          }
+        }
+      }
+    },
+    "Home country" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Домашняя страна"
+          }
+        }
+      }
+    },
+    "Home country (VPN may be off)" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Домашней стране (VPN может быть выключен)"
+          }
+        }
+      }
+    },
+    "IP address change" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Смене IP-адреса"
+          }
+        }
+      }
+    },
+    "IP address changed" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IP-адрес изменился"
+          }
+        }
+      }
+    },
+    "Launch at login" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открывать при входе в систему"
+          }
+        }
+      }
+    },
+    "Loading…" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загрузка…"
+          }
+        }
+      }
+    },
+    "Local IP (%@): %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Локальный IP (%@): %@"
+          }
+        }
+      }
+    },
+    "MIT License" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Лицензия MIT"
+          }
+        }
+      }
+    },
+    "Menu bar" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Строка меню"
+          }
+        }
+      }
+    },
+    "No network connection" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Нет подключения к сети"
+          }
+        }
+      }
+    },
+    "Not set" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не задана"
+          }
+        }
+      }
+    },
+    "Notifications" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уведомления"
+          }
+        }
+      }
+    },
+    "Notifications are turned off for Show My IP in System Settings." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уведомления для Show My IP выключены в Системных настройках."
+          }
+        }
+      }
+    },
+    "Notify about" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Уведомлять о"
+          }
+        }
+      }
+    },
+    "Open Login Items Settings" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть настройки объектов входа"
+          }
+        }
+      }
+    },
+    "Open Notification Settings" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть настройки уведомлений"
+          }
+        }
+      }
+    },
+    "Option-click the menu bar icon to hide or show your IP address." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⌥-клик по значку в строке меню скрывает или показывает IP-адрес."
+          }
+        }
+      }
+    },
+    "Permission was not granted." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Разрешение не получено."
+          }
+        }
+      }
+    },
+    "Privacy" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Приватность"
+          }
+        }
+      }
+    },
+    "Provider: %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Провайдер: %@"
+          }
+        }
+      }
+    },
+    "Public %@: %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Публичный %@: %@"
+          }
+        }
+      }
+    },
+    "Quit" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выйти"
+          }
+        }
+      }
+    },
+    "Refresh" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновить"
+          }
+        }
+      }
+    },
+    "Settings…" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки…"
+          }
+        }
+      }
+    },
+    "Show My IP" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show My IP"
+          }
+        }
+      }
+    },
+    "Show My IP Settings" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Настройки Show My IP"
+          }
+        }
+      }
+    },
+    "Spoiler, animated on hover" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Спойлер, анимация при наведении"
+          }
+        }
+      }
+    },
+    "Startup" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запуск"
+          }
+        }
+      }
+    },
+    "Still spoiler" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Статичный спойлер"
+          }
+        }
+      }
+    },
+    "Turn off your VPN and pick the country you are physically in." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выключите VPN и выберите страну, в которой вы физически находитесь."
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Неизвестно"
+          }
+        }
+      }
+    },
+    "Use current country (%@ %@)" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Выбрать текущую (%@ %@)"
+          }
+        }
+      }
+    },
+    "VPN may be off" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возможно, VPN выключен"
+          }
+        }
+      }
+    },
+    "Version %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Версия %@"
+          }
+        }
+      }
+    },
+    "Waiting for permission — answer the macOS notification banner." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ждём разрешения — ответьте на баннер уведомления macOS."
+          }
+        }
+      }
+    },
+    "While hidden, addresses in the menu bar and menu are covered by the chosen style, and notifications don't show them. Clicking an address in the menu still copies it." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пока IP скрыт, адреса в строке меню и в меню закрыты выбранным стилем, а в уведомлениях не показываются. Клик по адресу в меню по-прежнему копирует его."
+          }
+        }
+      }
+    },
+    "You are online from %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сейчас вы в сети из страны %@"
+          }
+        }
+      }
+    },
+    "Your public IP address has changed." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ваш публичный IP-адрес изменился."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
