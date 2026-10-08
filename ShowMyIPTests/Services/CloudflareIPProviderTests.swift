@@ -61,6 +61,13 @@ struct CloudflareIPProviderTests {
         }
     }
 
+    @Test func clientSizeLimitIsReportedAsTooLarge() async {
+        let provider = CloudflareIPProvider(client: StubHTTPClient { _ in throw HTTPClientError.responseTooLarge })
+        await #expect(throws: IPProviderError.responseTooLarge) {
+            try await provider.fetchIPInfo()
+        }
+    }
+
     @Test func nonUTF8ResponseThrows() async {
         await #expect(throws: IPProviderError.invalidEncoding) {
             try await makeProvider(body: Data([0xFF, 0xFE, 0xFD])).fetchIPInfo()
