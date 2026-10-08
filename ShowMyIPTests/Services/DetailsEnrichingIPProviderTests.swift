@@ -27,10 +27,12 @@ struct DetailsEnrichingIPProviderTests {
 
     @Test func disabledSkipsDetailsRequest() async throws {
         let base = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
-        let details = StubDetailsProvider { Self.details(for: $0) }
+        let details = StubDetailsProvider { _ throws(IPProviderError) -> IPInfo in
+            Issue.record("Details must not be requested")
+            throw .network
+        }
         let info = try await Self.makeProvider(base: base, details: details, isEnabled: false).fetchIPInfo()
         #expect(info == base)
-        #expect(await details.calls.count == 0)
     }
 
     @Test func enabledAddsCityAndProviderButKeepsCountry() async throws {
