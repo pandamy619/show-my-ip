@@ -49,6 +49,15 @@ struct PrivacyMaskingTests {
         )
     }
 
+    @Test func menuMasksBothPublicAddresses() throws {
+        let ipv4 = try #require(IPAddress("185.23.45.67"))
+        let ipv6 = try #require(IPAddress("2a01:4f8::1"))
+        let info = IPInfo(address: ipv4, country: nil, secondaryAddress: ipv6)
+        let items = MenuInfoBuilder.items(for: .loaded(info), localAddresses: [], locale: locale, isHidden: true)
+        #expect(items.map(\.maskedSuffix) == ["***.**.**.**", "****:***::*"])
+        #expect(items.map(\.copyValue) == ["185.23.45.67", "2a01:4f8::1"])
+    }
+
     @Test func addressChangeNotificationHidesAddresses() throws {
         let from = try #require(IPAddress("1.1.1.1"))
         let to = try #require(IPAddress("2.2.2.2"))

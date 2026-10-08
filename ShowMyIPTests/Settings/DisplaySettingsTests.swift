@@ -14,6 +14,18 @@ struct DisplaySettingsTests {
     @Test func emptyStorageGivesDefaults() throws {
         let settings = DisplaySettings.load(from: try makeDefaults())
         #expect(settings == DisplaySettings(displayMode: .automatic, compactStyle: .flag))
+        #expect(settings.menuBarAddress == .ipv4)
+    }
+
+    @Test func readsStoredMenuBarAddress() throws {
+        let defaults = try makeDefaults()
+        defaults.set(MenuBarAddress.ipv6.rawValue, forKey: SettingsKey.menuBarAddress)
+        #expect(DisplaySettings.load(from: defaults).menuBarAddress == .ipv6)
+    }
+
+    @Test func menuBarAddressMapsToVersion() {
+        #expect(MenuBarAddress.ipv4.version == .v4)
+        #expect(MenuBarAddress.ipv6.version == .v6)
     }
 
     @Test func readsStoredValues() throws {
