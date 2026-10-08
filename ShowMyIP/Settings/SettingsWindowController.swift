@@ -24,7 +24,7 @@ final class SettingsWindowController {
         let controller = NSHostingController(rootView: rootView)
         controller.sizingOptions = [.preferredContentSize]
         let window = NSWindow(contentViewController: controller)
-        window.title = "Show My IP Settings"
+        window.title = String(localized: "Show My IP Settings")
         window.styleMask = [.titled, .closable, .fullSizeContentView]
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden

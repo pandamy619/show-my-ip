@@ -56,10 +56,10 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         )
         infoItems.forEach { menu.addItem(makeInfoItem($0)) }
         menu.addItem(.separator())
-        menu.addItem(makeActionItem("Refresh", action: #selector(refresh), key: "r"))
-        menu.addItem(makeActionItem("Settings…", action: #selector(openSettings), key: ","))
+        menu.addItem(makeActionItem(String(localized: "Refresh"), action: #selector(refresh), key: "r"))
+        menu.addItem(makeActionItem(String(localized: "Settings…"), action: #selector(openSettings), key: ","))
         menu.addItem(.separator())
-        menu.addItem(makeActionItem("Quit", action: #selector(quit), key: "q"))
+        menu.addItem(makeActionItem(String(localized: "Quit"), action: #selector(quit), key: "q"))
     }
 
     private func configureButton() {

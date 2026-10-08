@@ -35,11 +35,11 @@ enum MenuInfoBuilder {
     private static func statusItems(for status: AppState.Status, locale: Locale, isHidden: Bool) -> [MenuInfoItem] {
         switch status {
         case .loading:
-            [MenuInfoItem(title: "Loading…")]
+            [MenuInfoItem(title: String(localized: "Loading…"))]
         case .offline:
-            [MenuInfoItem(title: "No network connection")]
+            [MenuInfoItem(title: String(localized: "No network connection"))]
         case .failed:
-            [MenuInfoItem(title: "Could not determine public IP")]
+            [MenuInfoItem(title: String(localized: "Could not determine public IP"))]
         case .loaded(let info):
             loadedItems(for: info, locale: locale, isHidden: isHidden)
         }
@@ -53,16 +53,16 @@ enum MenuInfoBuilder {
         }
         let address = info.address.value
         let mask = isHidden ? PrivacyPreferences.masked(address) : nil
-        let title = "Public \(versionName(info.address.version)): \(mask ?? address)"
+        let title = String(localized: "Public \(versionName(info.address.version)): \(mask ?? address)")
         items.append(MenuInfoItem(title: title, copyValue: address, maskedSuffix: mask))
         guard !isHidden else {
             return items
         }
         if let city = info.city {
-            items.append(MenuInfoItem(title: "City: \(city)"))
+            items.append(MenuInfoItem(title: String(localized: "City: \(city)")))
         }
         if let organization = info.organization {
-            items.append(MenuInfoItem(title: "Provider: \(organization)"))
+            items.append(MenuInfoItem(title: String(localized: "Provider: \(organization)")))
         }
         return items
     }
@@ -70,7 +70,7 @@ enum MenuInfoBuilder {
     private static func localAddressItem(_ local: LocalAddress, isHidden: Bool) -> MenuInfoItem {
         let mask = isHidden ? PrivacyPreferences.masked(local.address.value) : nil
         return MenuInfoItem(
-            title: "Local IP (\(local.interfaceName)): \(mask ?? local.address.value)",
+            title: String(localized: "Local IP (\(local.interfaceName)): \(mask ?? local.address.value)"),
             copyValue: local.address.value,
             maskedSuffix: mask
         )
