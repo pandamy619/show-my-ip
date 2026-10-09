@@ -1,25 +1,26 @@
 import AppKit
+import MapKit
 
 @MainActor
 final class MapMenuItemView: NSView {
     private static let inset: CGFloat = 10
-    private static let minimumMapWidth: CGFloat = 280
     private static let verticalPadding: CGFloat = 4
+    private static let minimumMapWidth: CGFloat = 280
+    private static let mapHeight: CGFloat = 170
     private static let cornerRadius: CGFloat = 8
-    private static let pinSize: CGFloat = 12
-    private static let pinBorder: CGFloat = 2
+    private static let buttonSize: CGFloat = 26
+    private static let buttonMargin: CGFloat = 6
+    private static let openSymbol = "arrow.up.forward.app"
 
-    private let mapView = NSView()
-    private let pin = NSView()
-    private let onSelect: @MainActor () -> Void
+    private let mapView = MKMapView()
+    private let pin = MKPointAnnotation()
+    private let openButton = NSButton()
+    private let onOpen: @MainActor (MapLocation) -> Void
+    private var location: MapLocation?
 
-    var image: NSImage? {
-        didSet { mapView.layer?.contents = image }
-    }
-
-    init(title: String, onSelect: @escaping @MainActor () -> Void) {
-        self.onSelect = onSelect
-        let mapSize = NSSize(width: Self.minimumMapWidth, height: MapSnapshotter.size.height)
+    init(onOpen: @escaping @MainActor (MapLocation) -> Void) {
+        self.onOpen = onOpen
+        let mapSize = NSSize(width: Self.minimumMapWidth, height: Self.mapHeight)
         super.init(
             frame: NSRect(
                 x: 0,
@@ -29,41 +30,69 @@ final class MapMenuItemView: NSView {
             )
         )
         autoresizingMask = [.width]
-
-        mapView.frame = NSRect(origin: NSPoint(x: Self.inset, y: Self.verticalPadding), size: mapSize)
-        mapView.autoresizingMask = [.width]
-        mapView.wantsLayer = true
-        mapView.layer?.contentsGravity = .resizeAspectFill
-        mapView.layer?.cornerRadius = Self.cornerRadius
-        mapView.layer?.masksToBounds = true
-        mapView.layer?.backgroundColor = NSColor.quaternaryLabelColor.cgColor
-        mapView.setAccessibilityElement(true)
-        mapView.setAccessibilityRole(.image)
-        mapView.setAccessibilityLabel(title)
-        addSubview(mapView)
-
-        pin.frame = NSRect(
-            x: mapView.frame.midX - Self.pinSize / 2,
-            y: mapView.frame.midY - Self.pinSize / 2,
-            width: Self.pinSize,
-            height: Self.pinSize
-        )
-        pin.autoresizingMask = [.minXMargin, .maxXMargin]
-        pin.wantsLayer = true
-        pin.layer?.cornerRadius = Self.pinSize / 2
-        pin.layer?.backgroundColor = NSColor.systemRed.cgColor
-        pin.layer?.borderColor = NSColor.white.cgColor
-        pin.layer?.borderWidth = Self.pinBorder
-        addSubview(pin)
-        toolTip = title
+        configureMap(frame: NSRect(origin: NSPoint(x: Self.inset, y: Self.verticalPadding), size: mapSize))
+        configureOpenButton()
     }
 
     required init?(coder: NSCoder) {
         nil
     }
 
-    override func mouseUp(with event: NSEvent) {
+    func show(_ location: MapLocation) {
+        guard location != self.location else {
+            return
+        }
+        self.location = location
+        let center = CLLocationCoordinate2D(
+            latitude: location.region.center.latitude,
+            longitude: location.region.center.longitude
+        )
+        pin.coordinate = center
+        pin.title = location.title
+        let span = MKCoordinateSpan(
+            latitudeDelta: location.region.latitudeSpan,
+            longitudeDelta: location.region.longitudeSpan
+        )
+        mapView.setRegion(MKCoordinateRegion(center: center, span: span), animated: false)
+    }
+
+    private func configureMap(frame: NSRect) {
+        mapView.frame = frame
+        mapView.autoresizingMask = [.width]
+        mapView.wantsLayer = true
+        mapView.layer?.cornerRadius = Self.cornerRadius
+        mapView.layer?.masksToBounds = true
+        mapView.pointOfInterestFilter = .excludingAll
+        mapView.showsZoomControls = true
+        mapView.showsCompass = false
+        mapView.isPitchEnabled = false
+        mapView.isRotateEnabled = false
+        mapView.addAnnotation(pin)
+        addSubview(mapView)
+    }
+
+    private func configureOpenButton() {
+        let title = String(localized: "Open in Maps")
+        openButton.image = NSImage(systemSymbolName: Self.openSymbol, accessibilityDescription: title)
+        openButton.bezelStyle = .circular
+        openButton.toolTip = title
+        openButton.target = self
+        openButton.action = #selector(openInMaps)
+        openButton.frame = NSRect(
+            x: mapView.frame.maxX - Self.buttonSize - Self.buttonMargin,
+            y: mapView.frame.maxY - Self.buttonSize - Self.buttonMargin,
+            width: Self.buttonSize,
+            height: Self.buttonSize
+        )
+        openButton.autoresizingMask = [.minXMargin, .minYMargin]
+        addSubview(openButton)
+    }
+
+    @objc private func openInMaps() {
+        guard let location else {
+            return
+        }
         enclosingMenuItem?.menu?.cancelTracking()
-        onSelect()
+        onOpen(location)
     }
 }
