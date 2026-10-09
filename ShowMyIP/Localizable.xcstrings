@@ -491,6 +491,16 @@
         }
       }
     },
+    "Open in Maps" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Открыть в Картах"
+          }
+        }
+      }
+    },
     "Option-click the menu bar icon to hide or show your IP address." : {
       "localizations" : {
         "ru" : {

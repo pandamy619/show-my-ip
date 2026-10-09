@@ -206,7 +206,6 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         if case .loaded(let info) = status {
             history.record(info, at: Date())
         }
-        mapMenuFactory.prefetch(for: status, isHidden: privacyState.isHidden)
         notificationCoordinator.handle(
             status,
             preferences: .load(from: defaults),
