@@ -15,6 +15,19 @@ struct NotificationContentBuilderTests {
         #expect(result == NotificationContent(title: "Country changed", body: "🇳🇱 Netherlands → 🇩🇪 Germany"))
     }
 
+    @Test func ipv6Leak() throws {
+        let notification = IPNotification.ipv6Leak(
+            ipv4Country: try #require(CountryCode("NL")),
+            ipv6Country: try #require(CountryCode("RU"))
+        )
+        let expected = NotificationContent(
+            title: "Possible IPv6 leak",
+            body: "IPv6 goes through 🇷🇺 Russia, IPv4 through 🇳🇱 Netherlands.",
+            playsSound: true
+        )
+        #expect(content(for: notification) == expected)
+    }
+
     @Test func countryChangeToUnknown() {
         let result = content(for: .countryChanged(from: CountryCode("NL"), to: nil))
         #expect(result.body == "🇳🇱 Netherlands → 🌐 Unknown")

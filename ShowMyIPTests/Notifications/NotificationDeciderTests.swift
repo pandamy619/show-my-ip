@@ -107,4 +107,36 @@ struct NotificationDeciderTests {
     @Test func notificationsAreOffByDefault() {
         #expect(!NotificationPreferences().isEnabled)
     }
+
+    private func leaking(_ ipv6Country: String = "RU") throws -> AppState.Status {
+        let ipv6 = try #require(IPAddress("2a01:4f8:c0c:1::1"))
+        let info = try IPInfo.fixture(address: "1.1.1.1", country: "NL")
+            .withSecondaryAddress(ipv6, country: CountryCode(ipv6Country))
+        return .loaded(info)
+    }
+
+    private func expectedLeak() throws -> IPNotification {
+        let netherlands = try #require(CountryCode("NL"))
+        let russia = try #require(CountryCode("RU"))
+        return .ipv6Leak(ipv4Country: netherlands, ipv6Country: russia)
+    }
+
+    @Test func ipv6LeakNotifiesEvenOnFirstLoad() throws {
+        #expect(decide([try leaking()]) == [try expectedLeak()])
+    }
+
+    @Test func ipv6LeakNotifiesWhenItStarts() throws {
+        let result = decide([try loaded("1.1.1.1", "NL"), try leaking()])
+        #expect(result.last == .some(try expectedLeak()))
+    }
+
+    @Test func ongoingIPv6LeakIsSilent() throws {
+        #expect(decide([try leaking(), try leaking()]).last == .some(nil))
+    }
+
+    @Test func ipv6LeakIsSilentWhenDisabled() throws {
+        var preferences = defaults
+        preferences.notifiesIPv6Leak = false
+        #expect(decide([try leaking()], preferences: preferences) == [nil])
+    }
 }

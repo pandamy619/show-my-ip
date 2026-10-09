@@ -41,6 +41,15 @@ struct MenuInfoBuilderTests {
         )
     }
 
+    @Test(arguments: [false, true])
+    func ipv6LeakShowsWarning(isHidden: Bool) throws {
+        let ipv6 = try #require(IPAddress("2a01:4f8:c0c:1::1"))
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+            .withSecondaryAddress(ipv6, country: CountryCode("RU"))
+        let items = MenuInfoBuilder.items(for: .loaded(info), localAddresses: [], locale: locale, isHidden: isHidden)
+        #expect(items.contains(MenuInfoItem(title: "⚠️ IPv6 leak: 🇷🇺 Russia")))
+    }
+
     @Test func statusMessagesForNonLoadedStates() {
         #expect(items(for: .loading) == [MenuInfoItem(title: "Loading…")])
         #expect(items(for: .offline) == [MenuInfoItem(title: "No network connection")])
