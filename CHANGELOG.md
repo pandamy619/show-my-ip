@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Optional map of the IP location at the top of the menu (Apple Maps, off by default).
+
 ## [0.2.0] — 2026-10-08
 
 - Privacy mode: ⌥-click the menu bar icon to hide the IP in the menu bar, menu and notifications, with an animated spoiler or other styles.
