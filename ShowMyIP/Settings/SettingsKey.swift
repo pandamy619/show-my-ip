@@ -4,4 +4,5 @@ enum SettingsKey {
     static let menuBarAddress = "menuBarAddress"
     static let showsLocationDetails = "showsLocationDetails"
     static let keepsHistory = "history.isEnabled"
+    static let showsMap = "showsMap"
 }

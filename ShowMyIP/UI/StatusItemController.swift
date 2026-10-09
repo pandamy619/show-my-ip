@@ -17,6 +17,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let infoItemFactory = InfoMenuItemFactory()
     private let history: IPHistory
     private let historyMenuFactory: HistoryMenuFactory
+    private let mapMenuFactory: MapMenuFactory
     private let appState: AppState
     private let screenObserver: ScreenObserver
     private let privacyState: PrivacyState
@@ -43,6 +44,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         self.settingsWindowController = settingsWindowController
         self.history = history
         historyMenuFactory = HistoryMenuFactory(history: history, infoItemFactory: infoItemFactory)
+        mapMenuFactory = MapMenuFactory(defaults: defaults)
         self.defaults = defaults
         showsLocationDetails = defaults.bool(forKey: SettingsKey.showsLocationDetails)
         super.init()
@@ -54,6 +56,9 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     func menuNeedsUpdate(_ menu: NSMenu) {
         menu.removeAllItems()
+        if let mapItem = mapMenuFactory.makeItem(for: appState.status, isHidden: privacyState.isHidden) {
+            menu.addItem(mapItem)
+        }
         let infoItems = MenuInfoBuilder.items(
             for: appState.status,
             localAddresses: appState.localAddresses,
@@ -201,6 +206,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         if case .loaded(let info) = status {
             history.record(info, at: Date())
         }
+        mapMenuFactory.prefetch(for: status, isHidden: privacyState.isHidden)
         notificationCoordinator.handle(
             status,
             preferences: .load(from: defaults),

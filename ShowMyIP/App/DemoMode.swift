@@ -24,6 +24,8 @@
             let country: String
             let city: String
             let organization: String
+            let latitude: Double
+            let longitude: Double
         }
 
         private static let snapshots = [
@@ -32,14 +34,18 @@
                 ipv6: "2001:db8::42",
                 country: "NL",
                 city: "Amsterdam",
-                organization: "Example Networks B.V."
+                organization: "Example Networks B.V.",
+                latitude: 52.374,
+                longitude: 4.8897
             ),
             Snapshot(
                 address: "198.51.100.7",
                 ipv6: nil,
                 country: "DE",
                 city: "Frankfurt am Main",
-                organization: "Sample Telecom GmbH"
+                organization: "Sample Telecom GmbH",
+                latitude: 50.1109,
+                longitude: 8.6821
             ),
         ]
 
@@ -56,6 +62,7 @@
                 country: CountryCode(snapshot.country),
                 city: snapshot.city,
                 organization: snapshot.organization,
+                coordinate: Coordinate(latitude: snapshot.latitude, longitude: snapshot.longitude),
                 secondaryAddress: snapshot.ipv6.flatMap(IPAddress.init)
             )
         }
