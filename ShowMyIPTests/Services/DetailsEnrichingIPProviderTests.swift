@@ -14,7 +14,13 @@ struct DetailsEnrichingIPProviderTests {
     }
 
     private static func details(for address: IPAddress, country: String = "DE") -> IPInfo {
-        IPInfo(address: address, country: CountryCode(country), city: "Amsterdam", organization: "AS1 Example")
+        IPInfo(
+            address: address,
+            country: CountryCode(country),
+            city: "Amsterdam",
+            organization: "AS1 Example",
+            coordinate: Coordinate(latitude: 52.374, longitude: 4.8897)
+        )
     }
 
     private static func makeProvider(
@@ -45,6 +51,7 @@ struct DetailsEnrichingIPProviderTests {
         #expect(info.country == CountryCode("NL"))
         #expect(info.city == "Amsterdam")
         #expect(info.organization == "AS1 Example")
+        #expect(info.coordinate == Coordinate(latitude: 52.374, longitude: 4.8897))
     }
 
     @Test func missingCountryIsTakenFromDetails() async throws {

@@ -27,6 +27,7 @@ struct LocalizationTests {
         ("Address", "Адрес"),
         ("Show city and provider", "Показывать город и провайдера"),
         ("History", "История"),
+        ("Show map", "Показывать карту"),
         ("Keep IP history", "Вести историю IP"),
     ])
     func translatesToRussian(key: String, expected: String) throws {

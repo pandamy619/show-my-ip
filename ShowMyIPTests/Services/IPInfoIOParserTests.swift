@@ -12,6 +12,7 @@ struct IPInfoIOParserTests {
           "region": "North Holland",
           "country": "NL",
           "org": "AS1234 Example ISP",
+          "loc": "52.3740,4.8897",
           "timezone": "Europe/Amsterdam"
         }
         """.utf8
@@ -23,6 +24,7 @@ struct IPInfoIOParserTests {
         #expect(info.country == CountryCode("NL"))
         #expect(info.city == "Amsterdam")
         #expect(info.organization == "AS1234 Example ISP")
+        #expect(info.coordinate == Coordinate(latitude: 52.374, longitude: 4.8897))
     }
 
     @Test func optionalFieldsMayBeAbsent() throws {
