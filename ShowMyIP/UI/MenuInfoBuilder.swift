@@ -52,6 +52,10 @@ enum MenuInfoBuilder {
             items.append(MenuInfoItem(title: "\(country.flagEmoji) \(name)"))
         }
         items += info.addresses.map { publicAddressItem($0, isHidden: isHidden) }
+        if let leakedCountry = info.leakedIPv6Country {
+            let name = locale.localizedString(forRegionCode: leakedCountry.value) ?? leakedCountry.value
+            items.append(MenuInfoItem(title: String(localized: "⚠️ IPv6 leak: \(leakedCountry.flagEmoji) \(name)")))
+        }
         guard !isHidden else {
             return items
         }
