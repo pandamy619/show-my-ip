@@ -4,5 +4,6 @@ struct NotificationPreferences: Equatable, Sendable {
     var notifiesAddressChange = false
     var notifiesHomeCountry = true
     var notifiesConnectionLoss = false
+    var notifiesIPv6Leak = true
     var homeCountry: CountryCode?
 }

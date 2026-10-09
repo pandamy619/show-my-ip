@@ -7,6 +7,7 @@ extension NotificationPreferences {
         static let notifiesAddressChange = "notifications.addressChange"
         static let notifiesHomeCountry = "notifications.homeCountry"
         static let notifiesConnectionLoss = "notifications.connectionLoss"
+        static let notifiesIPv6Leak = "notifications.ipv6Leak"
         static let homeCountryCode = "notifications.homeCountryCode"
     }
 
@@ -21,6 +22,7 @@ extension NotificationPreferences {
             notifiesAddressChange: flag(Key.notifiesAddressChange, fallback.notifiesAddressChange),
             notifiesHomeCountry: flag(Key.notifiesHomeCountry, fallback.notifiesHomeCountry),
             notifiesConnectionLoss: flag(Key.notifiesConnectionLoss, fallback.notifiesConnectionLoss),
+            notifiesIPv6Leak: flag(Key.notifiesIPv6Leak, fallback.notifiesIPv6Leak),
             homeCountry: defaults.string(forKey: Key.homeCountryCode).flatMap(CountryCode.init)
         )
     }

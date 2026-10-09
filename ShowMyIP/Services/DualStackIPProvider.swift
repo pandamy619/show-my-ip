@@ -38,7 +38,7 @@ struct DualStackIPProvider: IPProvider {
         guard ipv6Info.address.version == .v6, info.address.version == .v4 else {
             return info
         }
-        return info.withSecondaryAddress(ipv6Info.address)
+        return info.withSecondaryAddress(ipv6Info.address, country: ipv6Info.country)
     }
 
     private static func result(of provider: any IPProvider) async -> Result<IPInfo, IPProviderError> {

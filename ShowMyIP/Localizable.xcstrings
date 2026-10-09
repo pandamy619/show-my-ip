@@ -321,6 +321,26 @@
         }
       }
     },
+    "IPv6 goes through %@, IPv4 through %@." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IPv6 идёт через %@, а IPv4 — через %@."
+          }
+        }
+      }
+    },
+    "IPv6 leak (IPv6 in another country than IPv4)" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Утечке IPv6 (IPv6 в другой стране, чем IPv4)"
+          }
+        }
+      }
+    },
     "If your network has no IPv6, the menu bar shows IPv4." : {
       "localizations" : {
         "ru" : {
@@ -517,6 +537,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Разрешение не получено."
+          }
+        }
+      }
+    },
+    "Possible IPv6 leak" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возможна утечка IPv6"
           }
         }
       }
@@ -757,6 +787,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ваш публичный IP-адрес изменился."
+          }
+        }
+      }
+    },
+    "⚠️ IPv6 leak: %@ %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Утечка IPv6: %@ %@"
           }
         }
       }

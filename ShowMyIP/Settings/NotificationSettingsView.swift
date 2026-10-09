@@ -21,6 +21,7 @@ struct NotificationSettingsView: View {
     @AppStorage(Key.notifiesAddressChange) private var notifiesAddressChange = Self.initial.notifiesAddressChange
     @AppStorage(Key.notifiesHomeCountry) private var notifiesHomeCountry = Self.initial.notifiesHomeCountry
     @AppStorage(Key.notifiesConnectionLoss) private var notifiesConnectionLoss = Self.initial.notifiesConnectionLoss
+    @AppStorage(Key.notifiesIPv6Leak) private var notifiesIPv6Leak = Self.initial.notifiesIPv6Leak
     @AppStorage(Key.homeCountryCode) private var homeCountryCode = ""
     @State private var permissionState = PermissionState.idle
 
@@ -37,6 +38,7 @@ struct NotificationSettingsView: View {
                 Toggle("IP address change", isOn: $notifiesAddressChange)
                 Toggle("Home country (VPN may be off)", isOn: $notifiesHomeCountry)
                 Toggle("Connection loss", isOn: $notifiesConnectionLoss)
+                Toggle("IPv6 leak (IPv6 in another country than IPv4)", isOn: $notifiesIPv6Leak)
             }
             .disabled(!isEnabled)
             Section("Home country") {

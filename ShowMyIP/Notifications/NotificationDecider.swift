@@ -17,7 +17,13 @@ struct NotificationDecider {
                 lastInfo = info
                 isOffline = false
             }
-            guard let previous = lastInfo, preferences.isEnabled else {
+            guard preferences.isEnabled else {
+                return nil
+            }
+            if let leak = startedIPv6Leak(previous: lastInfo, current: info, preferences: preferences) {
+                return leak
+            }
+            guard let previous = lastInfo else {
                 return nil
             }
             return notification(from: previous, to: info, preferences: preferences)
@@ -39,6 +45,20 @@ struct NotificationDecider {
             return .addressChanged(from: previous.address, to: current.address)
         }
         return nil
+    }
+
+    private func startedIPv6Leak(
+        previous: IPInfo?,
+        current: IPInfo,
+        preferences: NotificationPreferences
+    ) -> IPNotification? {
+        guard
+            preferences.notifiesIPv6Leak, let ipv4Country = current.country,
+            let ipv6Country = current.leakedIPv6Country, previous?.leakedIPv6Country != ipv6Country
+        else {
+            return nil
+        }
+        return .ipv6Leak(ipv4Country: ipv4Country, ipv6Country: ipv6Country)
     }
 
     private func arrivedHomeCountry(

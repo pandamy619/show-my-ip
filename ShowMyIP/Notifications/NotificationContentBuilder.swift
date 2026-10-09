@@ -27,6 +27,17 @@ enum NotificationContentBuilder {
                 body: String(localized: "You are online from \(countryName(country, locale: locale))"),
                 playsSound: true
             )
+        case .ipv6Leak(let ipv4Country, let ipv6Country):
+            NotificationContent(
+                title: String(localized: "Possible IPv6 leak"),
+                body: String(
+                    localized: """
+                        IPv6 goes through \(countryName(ipv6Country, locale: locale)), \
+                        IPv4 through \(countryName(ipv4Country, locale: locale)).
+                        """
+                ),
+                playsSound: true
+            )
         case .connectionLost:
             NotificationContent(
                 title: String(localized: "Connection lost"),
