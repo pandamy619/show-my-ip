@@ -139,4 +139,21 @@ struct NotificationDeciderTests {
         preferences.notifiesIPv6Leak = false
         #expect(decide([try leaking()], preferences: preferences) == [nil])
     }
+
+    @Test func vpnDisconnectNotifies() throws {
+        var decider = NotificationDecider()
+        let status = try loaded("1.1.1.1", "NL")
+        #expect(decider.process(status, vpnActive: true, preferences: defaults) == nil)
+        #expect(decider.process(status, vpnActive: false, preferences: defaults) == .vpnDisconnected)
+        #expect(decider.process(status, vpnActive: false, preferences: defaults) == nil)
+    }
+
+    @Test func vpnDisconnectIsSilentWhenDisabled() throws {
+        var preferences = defaults
+        preferences.notifiesVPNDisconnect = false
+        var decider = NotificationDecider()
+        let status = try loaded("1.1.1.1", "NL")
+        _ = decider.process(status, vpnActive: true, preferences: preferences)
+        #expect(decider.process(status, vpnActive: false, preferences: preferences) == nil)
+    }
 }

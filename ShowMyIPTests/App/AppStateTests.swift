@@ -13,13 +13,15 @@ struct AppStateTests {
         provider: any IPProvider,
         networkMonitor: any NetworkMonitoring = StubNetworkMonitor(stream: AsyncStream { _ in }),
         sleeper: ManualSleeper = ManualSleeper(),
-        localAddresses: [LocalAddress] = []
+        localAddresses: [LocalAddress] = [],
+        vpnStatus: VPNStatus = VPNStatus(interfaceName: nil)
     ) -> AppState {
         AppState(
             provider: provider,
             networkMonitor: networkMonitor,
             sleep: { duration in try await sleeper.sleep(for: duration) },
-            readLocalAddresses: { localAddresses }
+            readLocalAddresses: { localAddresses },
+            readVPNStatus: { vpnStatus }
         )
     }
 
@@ -140,5 +142,12 @@ struct AppStateTests {
         let state = makeState(provider: StubIPProvider { info }, localAddresses: [local])
         await state.refresh()
         #expect(state.localAddresses == [local])
+    }
+
+    @Test func refreshReadsVPNStatus() async throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        let state = makeState(provider: StubIPProvider { info }, vpnStatus: VPNStatus(interfaceName: "utun4"))
+        await state.refresh()
+        #expect(state.vpnStatus == VPNStatus(interfaceName: "utun4"))
     }
 }

@@ -50,6 +50,29 @@ struct MenuInfoBuilderTests {
         #expect(items.contains(MenuInfoItem(title: "⚠️ IPv6 leak: 🇷🇺 Russia")))
     }
 
+    @Test func vpnStatusIsShownAfterCountry() throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        let on = MenuInfoBuilder.items(
+            for: .loaded(info),
+            localAddresses: [],
+            locale: locale,
+            vpnStatus: VPNStatus(interfaceName: "utun4")
+        )
+        #expect(on.prefix(2) == [MenuInfoItem(title: "🇳🇱 Netherlands"), MenuInfoItem(title: "🔒 VPN on (utun4)")])
+        let off = MenuInfoBuilder.items(
+            for: .loaded(info),
+            localAddresses: [],
+            locale: locale,
+            vpnStatus: VPNStatus(interfaceName: nil)
+        )
+        #expect(off.contains(MenuInfoItem(title: "🔓 VPN off")))
+    }
+
+    @Test func unknownVPNStatusIsNotShown() throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        #expect(!items(for: .loaded(info)).contains { $0.title.contains("VPN") })
+    }
+
     @Test func statusMessagesForNonLoadedStates() {
         #expect(items(for: .loading) == [MenuInfoItem(title: "Loading…")])
         #expect(items(for: .offline) == [MenuInfoItem(title: "No network connection")])
