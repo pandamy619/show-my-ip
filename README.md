@@ -25,7 +25,7 @@
 - **Map** of the IP location in the menu (optional).
 - **History** of recent IP changes, kept only on your Mac.
 - **Privacy mode.** ⌥-click the icon to hide the IP behind a spoiler — handy on calls and in cafés.
-- **Notifications.** Country change, IP change, connection loss, and a warning when traffic leaves through your home country — VPN may be off.
+- **Notifications.** Country change, IP change, connection loss, a warning when traffic leaves through your home country — VPN may be off, and a warning when IPv6 goes through another country than IPv4 — IPv6 may bypass the VPN.
 - **Launch at login.**
 - **English and Russian** interface.
 - **Private by design.** No analytics, no third-party dependencies, sandboxed.
