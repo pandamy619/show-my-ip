@@ -9,9 +9,10 @@ struct DualStackIPProviderTests {
 
     @Test func addsIPv6AsSecondaryAddress() async throws {
         let ipv4Info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
-        let ipv6Info = try IPInfo.fixture(address: "2a01:4f8:c0c:1::1", country: "NL")
+        let ipv6Info = try IPInfo.fixture(address: "2a01:4f8:c0c:1::1", country: "RU")
         let provider = DualStackIPProvider(ipv4: StubIPProvider { ipv4Info }, ipv6: StubIPProvider { ipv6Info })
         let info = try await provider.fetchIPInfo()
+        #expect(info.secondaryCountry == CountryCode("RU"))
         #expect(info.address == ipv4Info.address)
         #expect(info.country == ipv4Info.country)
         #expect(info.secondaryAddress == ipv6Info.address)
