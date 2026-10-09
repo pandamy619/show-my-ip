@@ -31,6 +31,7 @@
 - **Private by design.** No analytics, no third-party dependencies, sandboxed.
 
 <p align="center"><img src="docs/images/privacy.gif" width="420" alt="Hiding the IP with Option-click"></p>
+<p align="center"><img src="docs/images/map.gif" width="370" alt="Interactive map in the menu"></p>
 
 ## Installation
 

@@ -31,6 +31,7 @@
 - **Приватность.** Без аналитики и сторонних зависимостей, в песочнице.
 
 <p align="center"><img src="docs/images/privacy.gif" width="420" alt="Скрытие IP по ⌥-клику"></p>
+<p align="center"><img src="docs/images/map.gif" width="370" alt="Интерактивная карта в меню"></p>
 
 ## Установка
 
