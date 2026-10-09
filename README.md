@@ -22,6 +22,7 @@
 - **Flag and IP in the menu bar,** with a compact mode for small screens.
 - **Auto-refresh** of the IP and flag.
 - **Details on click.** Country, public IPv4 and IPv6, local addresses, and optionally city and provider. Click an address to copy it.
+- **Map** of the IP location in the menu (optional).
 - **History** of recent IP changes, kept only on your Mac.
 - **Privacy mode.** ⌥-click the icon to hide the IP behind a spoiler — handy on calls and in cafés.
 - **Notifications.** Country change, IP change, connection loss, and a warning when traffic leaves through your home country — VPN may be off.
@@ -42,7 +43,7 @@
 - Click the flag to see details and copy addresses.
 - ⌥-click the flag to hide or show the IP (turn it on in Settings → Privacy).
 - **Settings** (⌘,):
-  - **General** — launch at login, display mode (Automatic / Compact / Full), compact style, IPv4 or IPv6 in the menu bar, city and provider.
+  - **General** — launch at login, display mode (Automatic / Compact / Full), compact style, IPv4 or IPv6 in the menu bar, city and provider, map.
   - **Notifications** — what to notify about and your home country.
   - **Privacy** — IP hiding, hidden IP style, IP history.
 - **Home country alert:** turn off your VPN, open Settings → Notifications and pick the country you are in. You will be warned whenever your traffic goes out through it.
@@ -71,7 +72,8 @@ The app makes only these HTTPS requests:
 | `[2606:4700:4700::1111]/cdn-cgi/trace` | every refresh, if your Mac has IPv6 | IPv6 |
 | `www.cloudflare.com/cdn-cgi/trace` | only if the request above fails | IP, country |
 | `ipinfo.io/json` | only if Cloudflare fails | IP, country, city, provider |
-| `ipinfo.io/<your IP>/json` | only with “Show city and provider” on, once per new IP | city, provider |
+| `ipinfo.io/<your IP>/json` | only with “Show city and provider” on, once per new IP | city, provider, coordinates |
+| Apple Maps | only with “Show map” on | map tiles around the IP location |
 
 IP history is stored only on your Mac.
 
@@ -109,6 +111,8 @@ ShowMyIP/
   UI/             menu bar label, menu, display modes
 ShowMyIPTests/    tests mirroring the app structure
 ```
+
+Country areas for the map come from [Natural Earth](https://www.naturalearthdata.com) (public domain).
 
 The app icon is generated from `design/logo.jpg` with `scripts/make_app_icon.py`.
 
