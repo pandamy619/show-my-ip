@@ -22,6 +22,7 @@
 - **Flag and IP in the menu bar,** with a compact mode for small screens.
 - **Auto-refresh** of the IP and flag.
 - **Details on click.** Country, public IPv4 and IPv6, local addresses, and optionally city and provider. Click an address to copy it.
+- **VPN status** in the menu, optional 🔒 in the menu bar, and an alert when the VPN disconnects.
 - **Map** of the IP location in the menu (optional).
 - **History** of recent IP changes, kept only on your Mac.
 - **Privacy mode.** ⌥-click the icon to hide the IP behind a spoiler — handy on calls and in cafés.
