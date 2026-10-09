@@ -3,13 +3,35 @@ enum MenuBarLabel: Equatable {
     case symbol(String)
 
     private static let unknownCountryEmoji = "🌐"
+    private static let vpnBadgeEmoji = "🔒"
 
     static func make(
         for status: AppState.Status,
         isCompact: Bool = false,
         compactStyle: CompactStyle = .flag,
         preferredVersion: IPAddress.Version = .v4,
-        isHidden: Bool = false
+        isHidden: Bool = false,
+        vpnBadge: Bool = false
+    ) -> MenuBarLabel {
+        let label = statusLabel(
+            for: status,
+            isCompact: isCompact,
+            compactStyle: compactStyle,
+            preferredVersion: preferredVersion,
+            isHidden: isHidden
+        )
+        guard vpnBadge, case .text(let text) = label else {
+            return label
+        }
+        return .text(vpnBadgeEmoji + text)
+    }
+
+    private static func statusLabel(
+        for status: AppState.Status,
+        isCompact: Bool,
+        compactStyle: CompactStyle,
+        preferredVersion: IPAddress.Version,
+        isHidden: Bool
     ) -> MenuBarLabel {
         switch status {
         case .loading:

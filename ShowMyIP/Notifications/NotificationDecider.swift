@@ -1,8 +1,29 @@
 struct NotificationDecider {
     private var lastInfo: IPInfo?
     private var isOffline = false
+    private var wasVPNActive: Bool?
 
-    mutating func process(_ status: AppState.Status, preferences: NotificationPreferences) -> IPNotification? {
+    mutating func process(
+        _ status: AppState.Status,
+        vpnActive: Bool? = nil,
+        preferences: NotificationPreferences
+    ) -> IPNotification? {
+        let statusNotification = processStatus(status, preferences: preferences)
+        return vpnDisconnected(vpnActive, preferences: preferences) ? .vpnDisconnected : statusNotification
+    }
+
+    private mutating func vpnDisconnected(_ vpnActive: Bool?, preferences: NotificationPreferences) -> Bool {
+        guard let vpnActive else {
+            return false
+        }
+        defer { wasVPNActive = vpnActive }
+        return wasVPNActive == true && !vpnActive && preferences.isEnabled && preferences.notifiesVPNDisconnect
+    }
+
+    private mutating func processStatus(
+        _ status: AppState.Status,
+        preferences: NotificationPreferences
+    ) -> IPNotification? {
         switch status {
         case .loading, .failed:
             return nil

@@ -6,6 +6,10 @@ enum LocalAddressReader {
         LocalAddressFilter.displayable(readInterfaceAddresses())
     }
 
+    static func vpnStatus() -> VPNStatus {
+        VPNDetector.detect(readInterfaceAddresses())
+    }
+
     static func hasGlobalIPv6() -> Bool {
         readInterfaceAddresses().contains { IPAddress($0.address)?.isGlobalIPv6 == true }
     }

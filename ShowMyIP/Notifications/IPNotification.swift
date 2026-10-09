@@ -4,4 +4,5 @@ enum IPNotification: Equatable, Sendable {
     case homeCountryDetected(CountryCode)
     case ipv6Leak(ipv4Country: CountryCode, ipv6Country: CountryCode)
     case connectionLost
+    case vpnDisconnected
 }

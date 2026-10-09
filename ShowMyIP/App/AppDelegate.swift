@@ -15,7 +15,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 return AppState(
                     provider: DemoIPProvider(),
                     networkMonitor: NWPathNetworkMonitor(),
-                    readLocalAddresses: { DemoMode.localAddresses }
+                    readLocalAddresses: { DemoMode.localAddresses },
+                    readVPNStatus: { VPNStatus(interfaceName: "utun4") }
                 )
             }
         #endif
