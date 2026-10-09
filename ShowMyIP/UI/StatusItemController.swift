@@ -25,6 +25,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private let settingsWindowController: SettingsWindowController
     private let defaults: UserDefaults
     private var lastHandledStatus: AppState.Status?
+    private var lastHandledVPN: Bool?
     private var defaultsObserver: (any NSObjectProtocol)?
     private var showsLocationDetails: Bool
 
@@ -63,7 +64,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             for: appState.status,
             localAddresses: appState.localAddresses,
             locale: .current,
-            isHidden: privacyState.isHidden
+            isHidden: privacyState.isHidden,
+            vpnStatus: appState.vpnStatus
         )
         let hiddenStyle = PrivacyPreferences.load(from: defaults).hiddenStyle
         infoItems.forEach { menu.addItem(infoItemFactory.makeItem($0, hiddenStyle: hiddenStyle)) }
@@ -138,7 +140,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             isCompact: settings.displayMode.isCompact(hasNotchedScreen: screenObserver.hasNotchedScreen),
             compactStyle: settings.compactStyle,
             preferredVersion: settings.menuBarAddress.version,
-            isHidden: isHidden
+            isHidden: isHidden,
+            vpnBadge: settings.showsVPNBadge && appState.vpnStatus.isActive
         )
     }
 
@@ -199,15 +202,18 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     private func statusDidChange() {
         let status = appState.status
-        guard status != lastHandledStatus else {
+        let vpnActive = appState.vpnStatus.isActive
+        guard status != lastHandledStatus || vpnActive != lastHandledVPN else {
             return
         }
         lastHandledStatus = status
+        lastHandledVPN = vpnActive
         if case .loaded(let info) = status {
             history.record(info, at: Date())
         }
         notificationCoordinator.handle(
             status,
+            vpnActive: vpnActive,
             preferences: .load(from: defaults),
             isHidden: privacyState.isHidden
         )

@@ -661,6 +661,16 @@
         }
       }
     },
+    "Show 🔒 when a VPN is on" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показывать 🔒, когда включён VPN"
+          }
+        }
+      }
+    },
     "Spoiler, animated on hover" : {
       "localizations" : {
         "ru" : {
@@ -701,6 +711,16 @@
         }
       }
     },
+    "Traffic now goes through your regular connection." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Трафик теперь идёт через обычное подключение."
+          }
+        }
+      }
+    },
     "Turn off your VPN and pick the country you are physically in." : {
       "localizations" : {
         "ru" : {
@@ -727,6 +747,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Выбрать текущую (%@ %@)"
+          }
+        }
+      }
+    },
+    "VPN disconnected" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VPN отключился"
           }
         }
       }
@@ -797,6 +827,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "⚠️ Утечка IPv6: %@ %@"
+          }
+        }
+      }
+    },
+    "🔒 VPN on (%@)" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔒 VPN включён (%@)"
+          }
+        }
+      }
+    },
+    "🔓 VPN off" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔓 VPN выключен"
           }
         }
       }

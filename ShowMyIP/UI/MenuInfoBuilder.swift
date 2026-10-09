@@ -26,10 +26,28 @@ enum MenuInfoBuilder {
         for status: AppState.Status,
         localAddresses: [LocalAddress],
         locale: Locale,
-        isHidden: Bool = false
+        isHidden: Bool = false,
+        vpnStatus: VPNStatus? = nil
     ) -> [MenuInfoItem] {
-        statusItems(for: status, locale: locale, isHidden: isHidden)
-            + localAddresses.map { localAddressItem($0, isHidden: isHidden) }
+        var items = statusItems(for: status, locale: locale, isHidden: isHidden)
+        if let vpnStatus {
+            items.insert(vpnItem(vpnStatus), at: hasCountryRow(status) ? 1 : 0)
+        }
+        return items + localAddresses.map { localAddressItem($0, isHidden: isHidden) }
+    }
+
+    private static func hasCountryRow(_ status: AppState.Status) -> Bool {
+        guard case .loaded(let info) = status else {
+            return false
+        }
+        return info.country != nil
+    }
+
+    private static func vpnItem(_ status: VPNStatus) -> MenuInfoItem {
+        guard let interfaceName = status.interfaceName else {
+            return MenuInfoItem(title: String(localized: "🔓 VPN off"))
+        }
+        return MenuInfoItem(title: String(localized: "🔒 VPN on (\(interfaceName))"))
     }
 
     private static func statusItems(for status: AppState.Status, locale: Locale, isHidden: Bool) -> [MenuInfoItem] {

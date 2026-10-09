@@ -38,6 +38,12 @@ enum NotificationContentBuilder {
                 ),
                 playsSound: true
             )
+        case .vpnDisconnected:
+            NotificationContent(
+                title: String(localized: "VPN disconnected"),
+                body: String(localized: "Traffic now goes through your regular connection."),
+                playsSound: true
+            )
         case .connectionLost:
             NotificationContent(
                 title: String(localized: "Connection lost"),

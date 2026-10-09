@@ -6,6 +6,7 @@ struct GeneralSettingsView: View {
     @AppStorage(SettingsKey.menuBarAddress) private var menuBarAddress: MenuBarAddress = .ipv4
     @AppStorage(SettingsKey.showsLocationDetails) private var showsLocationDetails = false
     @AppStorage(SettingsKey.showsMap) private var showsMap = false
+    @AppStorage(SettingsKey.showsVPNBadge) private var showsVPNBadge = false
     @State private var launchAtLogin = LaunchAtLoginController(service: MainAppLoginItemService())
 
     var body: some View {
@@ -49,6 +50,7 @@ struct GeneralSettingsView: View {
                 Text("If your network has no IPv6, the menu bar shows IPv4.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+                Toggle("Show 🔒 when a VPN is on", isOn: $showsVPNBadge)
             }
             Section("Menu") {
                 Toggle(isOn: $showsLocationDetails) {

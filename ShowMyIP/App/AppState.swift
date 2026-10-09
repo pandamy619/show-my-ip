@@ -14,6 +14,7 @@ final class AppState {
 
     private(set) var status: Status = .loading
     private(set) var localAddresses: [LocalAddress] = []
+    private(set) var vpnStatus = VPNStatus(interfaceName: nil)
 
     private let provider: any IPProvider
     private let networkMonitor: any NetworkMonitoring
@@ -21,6 +22,7 @@ final class AppState {
     private let debounceInterval: Duration
     private let sleep: Sleep
     private let readLocalAddresses: @Sendable () -> [LocalAddress]
+    private let readVPNStatus: @Sendable () -> VPNStatus
 
     @ObservationIgnored private var lastSnapshot: NetworkSnapshot?
     @ObservationIgnored private var refreshGeneration = 0
@@ -33,7 +35,8 @@ final class AppState {
         refreshInterval: Duration = .seconds(300),
         debounceInterval: Duration = .seconds(3),
         sleep: @escaping Sleep = { try await Task.sleep(for: $0) },
-        readLocalAddresses: @escaping @Sendable () -> [LocalAddress] = LocalAddressReader.read
+        readLocalAddresses: @escaping @Sendable () -> [LocalAddress] = LocalAddressReader.read,
+        readVPNStatus: @escaping @Sendable () -> VPNStatus = LocalAddressReader.vpnStatus
     ) {
         self.provider = provider
         self.networkMonitor = networkMonitor
@@ -41,6 +44,7 @@ final class AppState {
         self.debounceInterval = debounceInterval
         self.sleep = sleep
         self.readLocalAddresses = readLocalAddresses
+        self.readVPNStatus = readVPNStatus
     }
 
     func start() {
@@ -71,7 +75,7 @@ final class AppState {
     }
 
     func refresh() async {
-        localAddresses = readLocalAddresses()
+        readInterfaces()
         guard !isOffline else {
             status = .offline
             return
@@ -109,7 +113,7 @@ final class AppState {
         )
         guard snapshot.isConnected else {
             debouncedRefreshTask?.cancel()
-            localAddresses = readLocalAddresses()
+            readInterfaces()
             status = .offline
             return
         }
@@ -117,6 +121,11 @@ final class AppState {
             return
         }
         scheduleDebouncedRefresh()
+    }
+
+    private func readInterfaces() {
+        localAddresses = readLocalAddresses()
+        vpnStatus = readVPNStatus()
     }
 
     private var isOffline: Bool {
