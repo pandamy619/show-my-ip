@@ -361,6 +361,16 @@
         }
       }
     },
+    "Loads a map of your IP location from Apple Maps. Hidden while the IP is hidden." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Загружает карту местоположения IP из Apple Maps. Скрывается вместе с IP."
+          }
+        }
+      }
+    },
     "Local IP (%@): %@" : {
       "localizations" : {
         "ru" : {
@@ -597,6 +607,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Показывать город и провайдера"
+          }
+        }
+      }
+    },
+    "Show map" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Показывать карту"
           }
         }
       }

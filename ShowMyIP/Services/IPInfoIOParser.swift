@@ -12,6 +12,7 @@ enum IPInfoIOParser {
         let country: String?
         let city: String?
         let org: String?
+        let loc: String?
     }
 
     static func parse(_ data: Data) throws(ParseError) -> IPInfo {
@@ -31,7 +32,8 @@ enum IPInfoIOParser {
             address: address,
             country: payload.country.flatMap(CountryCode.init),
             city: DisplayTextSanitizer.sanitize(payload.city),
-            organization: DisplayTextSanitizer.sanitize(payload.org)
+            organization: DisplayTextSanitizer.sanitize(payload.org),
+            coordinate: payload.loc.flatMap(Coordinate.init(ipinfoLocation:))
         )
     }
 }

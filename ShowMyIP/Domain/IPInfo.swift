@@ -4,12 +4,14 @@ struct IPInfo: Equatable, Sendable {
     let country: CountryCode?
     let city: String?
     let organization: String?
+    let coordinate: Coordinate?
 
     init(
         address: IPAddress,
         country: CountryCode?,
         city: String? = nil,
         organization: String? = nil,
+        coordinate: Coordinate? = nil,
         secondaryAddress: IPAddress? = nil
     ) {
         self.address = address
@@ -17,6 +19,7 @@ struct IPInfo: Equatable, Sendable {
         self.country = country
         self.city = city
         self.organization = organization
+        self.coordinate = coordinate
     }
 
     var addresses: [IPAddress] {
@@ -33,6 +36,7 @@ struct IPInfo: Equatable, Sendable {
             country: country,
             city: city,
             organization: organization,
+            coordinate: coordinate,
             secondaryAddress: secondaryAddress
         )
     }

@@ -32,6 +32,7 @@ struct DetailsEnrichingIPProvider: IPProvider {
             country: info.country ?? details.country,
             city: info.city ?? details.city,
             organization: info.organization ?? details.organization,
+            coordinate: info.coordinate ?? details.coordinate,
             secondaryAddress: info.secondaryAddress
         )
     }

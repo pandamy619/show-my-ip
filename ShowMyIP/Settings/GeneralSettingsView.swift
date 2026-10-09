@@ -5,6 +5,7 @@ struct GeneralSettingsView: View {
     @AppStorage(SettingsKey.compactStyle) private var compactStyle: CompactStyle = .flag
     @AppStorage(SettingsKey.menuBarAddress) private var menuBarAddress: MenuBarAddress = .ipv4
     @AppStorage(SettingsKey.showsLocationDetails) private var showsLocationDetails = false
+    @AppStorage(SettingsKey.showsMap) private var showsMap = false
     @State private var launchAtLogin = LaunchAtLoginController(service: MainAppLoginItemService())
 
     var body: some View {
@@ -53,6 +54,10 @@ struct GeneralSettingsView: View {
                 Toggle(isOn: $showsLocationDetails) {
                     Text("Show city and provider")
                     Text("Sends your IP address to ipinfo.io.")
+                }
+                Toggle(isOn: $showsMap) {
+                    Text("Show map")
+                    Text("Loads a map of your IP location from Apple Maps. Hidden while the IP is hidden.")
                 }
             }
         }
