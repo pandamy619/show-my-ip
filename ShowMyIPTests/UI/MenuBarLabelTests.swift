@@ -33,6 +33,12 @@ struct MenuBarLabelTests {
         #expect(MenuBarLabel.make(for: .loaded(info), preferredVersion: .v6) == .text("🇳🇱 185.23.45.67"))
     }
 
+    @Test func vpnBadgePrecedesFlag() throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        #expect(MenuBarLabel.make(for: .loaded(info), vpnBadge: true) == .text("🔒🇳🇱 185.23.45.67"))
+        #expect(MenuBarLabel.make(for: .loaded(info), isCompact: true, vpnBadge: true) == .text("🔒🇳🇱"))
+    }
+
     @Test func loadedWithoutCountryShowsGlobeEmoji() throws {
         let info = try IPInfo.fixture(address: "8.8.8.8")
         #expect(MenuBarLabel.make(for: .loaded(info)) == .text("🌐 8.8.8.8"))

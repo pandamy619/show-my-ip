@@ -28,6 +28,15 @@ struct NotificationContentBuilderTests {
         #expect(content(for: notification) == expected)
     }
 
+    @Test func vpnDisconnected() {
+        let expected = NotificationContent(
+            title: "VPN disconnected",
+            body: "Traffic now goes through your regular connection.",
+            playsSound: true
+        )
+        #expect(content(for: .vpnDisconnected) == expected)
+    }
+
     @Test func countryChangeToUnknown() {
         let result = content(for: .countryChanged(from: CountryCode("NL"), to: nil))
         #expect(result.body == "🇳🇱 Netherlands → 🌐 Unknown")
