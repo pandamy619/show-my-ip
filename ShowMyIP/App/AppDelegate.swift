@@ -63,6 +63,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        AppServices.appState = appState
+        AppServices.privacyState = privacyState
         let settingsWindowController = SettingsWindowController(
             appState: appState,
             notificationCoordinator: notificationCoordinator
