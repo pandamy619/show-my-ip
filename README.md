@@ -23,6 +23,7 @@
 - **Auto-refresh** of the IP and flag.
 - **Details on click.** Country, public IPv4 and IPv6, local addresses, and optionally city and provider. Click an address to copy it.
 - **VPN status** in the menu, optional 🔒 in the menu bar, and an alert when the VPN disconnects.
+- **DNS leak check** (optional): which country your DNS resolver is in, with a warning when it differs from your IP.
 - **Map** of the IP location in the menu (optional).
 - **History** of recent IP changes, kept only on your Mac.
 - **Privacy mode.** ⌥-click the icon to hide the IP behind a spoiler — handy on calls and in cafés.
@@ -75,6 +76,8 @@ The app makes only these HTTPS requests:
 | `www.cloudflare.com/cdn-cgi/trace` | only if the request above fails | IP, country |
 | `ipinfo.io/json` | only if Cloudflare fails | IP, country, city, provider |
 | `ipinfo.io/<your IP>/json` | only with “Show city and provider” on, once per new IP | city, provider, coordinates |
+| `whoami.akamai.net` (DNS lookup) | only with “Check DNS resolver” on | IP of your DNS resolver |
+| `ipinfo.io/<resolver IP>/json` | only with “Check DNS resolver” on, once per new resolver | resolver country and provider |
 | Apple Maps | only with “Show map” on | map tiles around the IP location |
 
 IP history is stored only on your Mac.
