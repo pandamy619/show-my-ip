@@ -34,7 +34,8 @@ struct DetailsEnrichingIPProvider: IPProvider {
             organization: info.organization ?? details.organization,
             coordinate: info.coordinate ?? details.coordinate,
             secondaryAddress: info.secondaryAddress,
-            secondaryCountry: info.secondaryCountry
+            secondaryCountry: info.secondaryCountry,
+            dnsResolver: info.dnsResolver
         )
     }
 

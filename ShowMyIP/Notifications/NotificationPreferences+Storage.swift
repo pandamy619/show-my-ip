@@ -9,6 +9,7 @@ extension NotificationPreferences {
         static let notifiesConnectionLoss = "notifications.connectionLoss"
         static let notifiesIPv6Leak = "notifications.ipv6Leak"
         static let notifiesVPNDisconnect = "notifications.vpnDisconnect"
+        static let notifiesDNSLeak = "notifications.dnsLeak"
         static let homeCountryCode = "notifications.homeCountryCode"
     }
 
@@ -25,6 +26,7 @@ extension NotificationPreferences {
             notifiesConnectionLoss: flag(Key.notifiesConnectionLoss, fallback.notifiesConnectionLoss),
             notifiesIPv6Leak: flag(Key.notifiesIPv6Leak, fallback.notifiesIPv6Leak),
             notifiesVPNDisconnect: flag(Key.notifiesVPNDisconnect, fallback.notifiesVPNDisconnect),
+            notifiesDNSLeak: flag(Key.notifiesDNSLeak, fallback.notifiesDNSLeak),
             homeCountry: defaults.string(forKey: Key.homeCountryCode).flatMap(CountryCode.init)
         )
     }

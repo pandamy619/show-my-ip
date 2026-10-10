@@ -81,6 +81,16 @@
         }
       }
     },
+    "Check DNS resolver" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверять DNS-сервер"
+          }
+        }
+      }
+    },
     "City: %@" : {
       "localizations" : {
         "ru" : {
@@ -181,6 +191,46 @@
         }
       }
     },
+    "DNS leak (needs DNS check in General settings)" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Утечке DNS (нужна проверка DNS в основных настройках)"
+          }
+        }
+      }
+    },
+    "DNS queries go through %@, traffic through %@." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS-запросы идут через %@, а трафик — через %@."
+          }
+        }
+      }
+    },
+    "DNS: %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS: %@"
+          }
+        }
+      }
+    },
+    "DNS: %@ %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "DNS: %@ %@"
+          }
+        }
+      }
+    },
     "Display" : {
       "localizations" : {
         "ru" : {
@@ -197,6 +247,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Включить уведомления"
+          }
+        }
+      }
+    },
+    "Finds your DNS resolver via whoami.akamai.net and sends its IP to ipinfo.io." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Определяет ваш DNS-сервер через whoami.akamai.net и отправляет его IP на ipinfo.io."
           }
         }
       }
@@ -541,6 +601,16 @@
         }
       }
     },
+    "Possible DNS leak" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возможна утечка DNS"
+          }
+        }
+      }
+    },
     "Possible IPv6 leak" : {
       "localizations" : {
         "ru" : {
@@ -817,6 +887,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ваш публичный IP-адрес изменился."
+          }
+        }
+      }
+    },
+    "⚠️ DNS leak: %@ %@" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚠️ Утечка DNS: %@ %@"
           }
         }
       }

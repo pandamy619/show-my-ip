@@ -6,6 +6,7 @@ struct IPInfo: Equatable, Sendable {
     let city: String?
     let organization: String?
     let coordinate: Coordinate?
+    let dnsResolver: DNSResolver?
 
     init(
         address: IPAddress,
@@ -14,7 +15,8 @@ struct IPInfo: Equatable, Sendable {
         organization: String? = nil,
         coordinate: Coordinate? = nil,
         secondaryAddress: IPAddress? = nil,
-        secondaryCountry: CountryCode? = nil
+        secondaryCountry: CountryCode? = nil,
+        dnsResolver: DNSResolver? = nil
     ) {
         self.address = address
         self.secondaryAddress = secondaryAddress
@@ -23,6 +25,7 @@ struct IPInfo: Equatable, Sendable {
         self.city = city
         self.organization = organization
         self.coordinate = coordinate
+        self.dnsResolver = dnsResolver
     }
 
     var addresses: [IPAddress] {
@@ -51,7 +54,28 @@ struct IPInfo: Equatable, Sendable {
             organization: organization,
             coordinate: coordinate,
             secondaryAddress: secondaryAddress,
-            secondaryCountry: secondaryCountry
+            secondaryCountry: secondaryCountry,
+            dnsResolver: dnsResolver
+        )
+    }
+
+    var dnsLeakCountry: CountryCode? {
+        guard let country, let resolverCountry = dnsResolver?.country, resolverCountry != country else {
+            return nil
+        }
+        return resolverCountry
+    }
+
+    func withDNSResolver(_ dnsResolver: DNSResolver) -> IPInfo {
+        IPInfo(
+            address: address,
+            country: country,
+            city: city,
+            organization: organization,
+            coordinate: coordinate,
+            secondaryAddress: secondaryAddress,
+            secondaryCountry: secondaryCountry,
+            dnsResolver: dnsResolver
         )
     }
 }

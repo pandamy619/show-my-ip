@@ -36,6 +36,20 @@ enum MenuInfoBuilder {
         return items + localAddresses.map { localAddressItem($0, isHidden: isHidden) }
     }
 
+    private static func dnsItem(for info: IPInfo, locale: Locale, isHidden: Bool) -> MenuInfoItem? {
+        guard let resolver = info.dnsResolver else {
+            return nil
+        }
+        guard let country = resolver.country else {
+            return isHidden ? nil : MenuInfoItem(title: String(localized: "DNS: \(resolver.address.value)"))
+        }
+        let name = locale.localizedString(forRegionCode: country.value) ?? country.value
+        guard info.dnsLeakCountry == nil else {
+            return MenuInfoItem(title: String(localized: "⚠️ DNS leak: \(country.flagEmoji) \(name)"))
+        }
+        return MenuInfoItem(title: String(localized: "DNS: \(country.flagEmoji) \(name)"))
+    }
+
     private static func hasCountryRow(_ status: AppState.Status) -> Bool {
         guard case .loaded(let info) = status else {
             return false
@@ -73,6 +87,9 @@ enum MenuInfoBuilder {
         if let leakedCountry = info.leakedIPv6Country {
             let name = locale.localizedString(forRegionCode: leakedCountry.value) ?? leakedCountry.value
             items.append(MenuInfoItem(title: String(localized: "⚠️ IPv6 leak: \(leakedCountry.flagEmoji) \(name)")))
+        }
+        if let item = dnsItem(for: info, locale: locale, isHidden: isHidden) {
+            items.append(item)
         }
         guard !isHidden else {
             return items

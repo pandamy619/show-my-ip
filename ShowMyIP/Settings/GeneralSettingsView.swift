@@ -7,6 +7,7 @@ struct GeneralSettingsView: View {
     @AppStorage(SettingsKey.showsLocationDetails) private var showsLocationDetails = false
     @AppStorage(SettingsKey.showsMap) private var showsMap = false
     @AppStorage(SettingsKey.showsVPNBadge) private var showsVPNBadge = false
+    @AppStorage(SettingsKey.checksDNS) private var checksDNS = false
     @State private var launchAtLogin = LaunchAtLoginController(service: MainAppLoginItemService())
 
     var body: some View {
@@ -56,6 +57,10 @@ struct GeneralSettingsView: View {
                 Toggle(isOn: $showsLocationDetails) {
                     Text("Show city and provider")
                     Text("Sends your IP address to ipinfo.io.")
+                }
+                Toggle(isOn: $checksDNS) {
+                    Text("Check DNS resolver")
+                    Text("Finds your DNS resolver via whoami.akamai.net and sends its IP to ipinfo.io.")
                 }
                 Toggle(isOn: $showsMap) {
                     Text("Show map")

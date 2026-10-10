@@ -44,6 +44,9 @@ struct NotificationDecider {
             if let leak = startedIPv6Leak(previous: lastInfo, current: info, preferences: preferences) {
                 return leak
             }
+            if let leak = startedDNSLeak(previous: lastInfo, current: info, preferences: preferences) {
+                return leak
+            }
             guard let previous = lastInfo else {
                 return nil
             }
@@ -80,6 +83,20 @@ struct NotificationDecider {
             return nil
         }
         return .ipv6Leak(ipv4Country: ipv4Country, ipv6Country: ipv6Country)
+    }
+
+    private func startedDNSLeak(
+        previous: IPInfo?,
+        current: IPInfo,
+        preferences: NotificationPreferences
+    ) -> IPNotification? {
+        guard
+            preferences.notifiesDNSLeak, let ipCountry = current.country,
+            let dnsCountry = current.dnsLeakCountry, previous?.dnsLeakCountry != dnsCountry
+        else {
+            return nil
+        }
+        return .dnsLeak(ipCountry: ipCountry, dnsCountry: dnsCountry)
     }
 
     private func arrivedHomeCountry(

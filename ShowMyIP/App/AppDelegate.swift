@@ -49,10 +49,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             ),
             isIPv6Available: LocalAddressReader.hasGlobalIPv6
         )
-        return DetailsEnrichingIPProvider(
+        let enriched = DetailsEnrichingIPProvider(
             base: dualStack,
             details: ipInfo,
             isEnabled: { UserDefaults.standard.bool(forKey: SettingsKey.showsLocationDetails) }
+        )
+        return DNSCheckingIPProvider(
+            base: enriched,
+            lookup: SystemDNSResolverLookup(),
+            details: ipInfo,
+            isEnabled: { UserDefaults.standard.bool(forKey: SettingsKey.checksDNS) }
         )
     }
 
