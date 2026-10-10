@@ -7,7 +7,7 @@
 <p align="center">Your country flag and public IP in the macOS menu bar.</p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.2.0-blue" alt="Version 0.2.0">
+  <img src="https://img.shields.io/badge/version-0.3.0-blue" alt="Version 0.3.0">
   <img src="https://img.shields.io/badge/macOS-14%2B-black" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-6-orange" alt="Swift 6">
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">

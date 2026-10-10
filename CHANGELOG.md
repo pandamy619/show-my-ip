@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.3.0] — 2026-10-10
 
 - Optional map of the IP location at the top of the menu (Apple Maps, off by default).
 - IPv6 leak warning: the menu and a notification tell you when IPv6 goes through another country than IPv4, a sign that IPv6 bypasses the VPN.
