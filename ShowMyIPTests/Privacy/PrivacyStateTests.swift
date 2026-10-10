@@ -49,4 +49,18 @@ struct PrivacyStateTests {
         state.preferencesDidChange()
         #expect(!state.isHidden)
     }
+
+    @Test func setHiddenFollowsRequestWhenAllowed() throws {
+        let state = PrivacyState(defaults: try makeDefaults(allowsHiding: true))
+        #expect(state.setHidden(true))
+        #expect(state.isHidden)
+        #expect(state.setHidden(false))
+        #expect(!state.isHidden)
+    }
+
+    @Test func setHiddenIsRefusedWhenHidingIsNotAllowed() throws {
+        let state = PrivacyState(defaults: try makeDefaults(allowsHiding: false))
+        #expect(!state.setHidden(true))
+        #expect(!state.isHidden)
+    }
 }
