@@ -15,6 +15,7 @@ final class AppState {
     private(set) var status: Status = .loading
     private(set) var localAddresses: [LocalAddress] = []
     private(set) var vpnStatus = VPNStatus(interfaceName: nil)
+    private(set) var latency: Duration?
 
     private let provider: any IPProvider
     private let networkMonitor: any NetworkMonitoring
@@ -23,6 +24,7 @@ final class AppState {
     private let sleep: Sleep
     private let readLocalAddresses: @Sendable () -> [LocalAddress]
     private let readVPNStatus: @Sendable () -> VPNStatus
+    private let measureLatency: @Sendable () async -> Duration?
 
     @ObservationIgnored private var lastSnapshot: NetworkSnapshot?
     @ObservationIgnored private var refreshGeneration = 0
@@ -36,7 +38,8 @@ final class AppState {
         debounceInterval: Duration = .seconds(3),
         sleep: @escaping Sleep = { try await Task.sleep(for: $0) },
         readLocalAddresses: @escaping @Sendable () -> [LocalAddress] = LocalAddressReader.read,
-        readVPNStatus: @escaping @Sendable () -> VPNStatus = LocalAddressReader.vpnStatus
+        readVPNStatus: @escaping @Sendable () -> VPNStatus = LocalAddressReader.vpnStatus,
+        measureLatency: @escaping @Sendable () async -> Duration? = TCPLatencyProbe.measure
     ) {
         self.provider = provider
         self.networkMonitor = networkMonitor
@@ -45,6 +48,7 @@ final class AppState {
         self.sleep = sleep
         self.readLocalAddresses = readLocalAddresses
         self.readVPNStatus = readVPNStatus
+        self.measureLatency = measureLatency
     }
 
     func start() {
@@ -84,6 +88,7 @@ final class AppState {
         let generation = refreshGeneration
         let newStatus: Status
         AppLogger.ipLookup.debug("Refreshing public IP")
+        async let measuredLatency = measureLatency()
         do {
             let info = try await provider.fetchIPInfo()
             let country = info.country?.value ?? "unknown"
@@ -99,6 +104,11 @@ final class AppState {
             return
         }
         status = newStatus
+        let newLatency = await measuredLatency
+        guard generation == refreshGeneration, !isOffline else {
+            return
+        }
+        latency = newLatency
     }
 
     func networkDidChange(_ snapshot: NetworkSnapshot) {
@@ -114,6 +124,7 @@ final class AppState {
         guard snapshot.isConnected else {
             debouncedRefreshTask?.cancel()
             readInterfaces()
+            latency = nil
             status = .offline
             return
         }
