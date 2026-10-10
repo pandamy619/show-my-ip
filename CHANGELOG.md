@@ -7,6 +7,7 @@
 - VPN status in the menu, an optional 🔒 in the menu bar, and a notification when the VPN disconnects.
 - Optional DNS check: shows which country your DNS resolver is in and warns when it differs from your IP country (DNS leak).
 - Shortcuts actions: Get Public IP, Get IP Details (JSON), Hide or Show IP, Toggle IP Hiding. Works from the terminal via `shortcuts run`.
+- Ping to Cloudflare in the menu.
 
 ## [0.2.0] — 2026-10-08
 

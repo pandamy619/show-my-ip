@@ -87,6 +87,7 @@ The app makes only these HTTPS requests:
 | Service | When | Data received |
 |---|---|---|
 | `1.1.1.1/cdn-cgi/trace` | every refresh | IPv4, country |
+| `1.1.1.1:443` (TCP connect, no data) | every refresh | ping |
 | `[2606:4700:4700::1111]/cdn-cgi/trace` | every refresh, if your Mac has IPv6 | IPv6 |
 | `www.cloudflare.com/cdn-cgi/trace` | only if the request above fails | IP, country |
 | `ipinfo.io/json` | only if Cloudflare fails | IP, country, city, provider |
