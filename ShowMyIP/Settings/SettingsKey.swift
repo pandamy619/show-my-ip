@@ -6,4 +6,5 @@ enum SettingsKey {
     static let keepsHistory = "history.isEnabled"
     static let showsMap = "showsMap"
     static let showsVPNBadge = "showsVPNBadge"
+    static let checksDNS = "checksDNS"
 }

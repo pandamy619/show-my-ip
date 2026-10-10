@@ -28,16 +28,12 @@ enum NotificationContentBuilder {
                 playsSound: true
             )
         case .ipv6Leak(let ipv4Country, let ipv6Country):
-            NotificationContent(
-                title: String(localized: "Possible IPv6 leak"),
-                body: String(
-                    localized: """
-                        IPv6 goes through \(countryName(ipv6Country, locale: locale)), \
-                        IPv4 through \(countryName(ipv4Country, locale: locale)).
-                        """
-                ),
-                playsSound: true
+            ipv6LeakContent(
+                ipv4: countryName(ipv4Country, locale: locale),
+                ipv6: countryName(ipv6Country, locale: locale)
             )
+        case .dnsLeak(let ipCountry, let dnsCountry):
+            dnsLeakContent(ip: countryName(ipCountry, locale: locale), dns: countryName(dnsCountry, locale: locale))
         case .vpnDisconnected:
             NotificationContent(
                 title: String(localized: "VPN disconnected"),
@@ -50,6 +46,22 @@ enum NotificationContentBuilder {
                 body: String(localized: "No network connection")
             )
         }
+    }
+
+    private static func ipv6LeakContent(ipv4: String, ipv6: String) -> NotificationContent {
+        NotificationContent(
+            title: String(localized: "Possible IPv6 leak"),
+            body: String(localized: "IPv6 goes through \(ipv6), IPv4 through \(ipv4)."),
+            playsSound: true
+        )
+    }
+
+    private static func dnsLeakContent(ip: String, dns: String) -> NotificationContent {
+        NotificationContent(
+            title: String(localized: "Possible DNS leak"),
+            body: String(localized: "DNS queries go through \(dns), traffic through \(ip)."),
+            playsSound: true
+        )
     }
 
     private static func countryName(_ country: CountryCode?, locale: Locale) -> String {

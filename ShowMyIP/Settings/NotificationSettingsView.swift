@@ -23,6 +23,7 @@ struct NotificationSettingsView: View {
     @AppStorage(Key.notifiesConnectionLoss) private var notifiesConnectionLoss = Self.initial.notifiesConnectionLoss
     @AppStorage(Key.notifiesIPv6Leak) private var notifiesIPv6Leak = Self.initial.notifiesIPv6Leak
     @AppStorage(Key.notifiesVPNDisconnect) private var notifiesVPNDisconnect = Self.initial.notifiesVPNDisconnect
+    @AppStorage(Key.notifiesDNSLeak) private var notifiesDNSLeak = Self.initial.notifiesDNSLeak
     @AppStorage(Key.homeCountryCode) private var homeCountryCode = ""
     @State private var permissionState = PermissionState.idle
 
@@ -41,6 +42,7 @@ struct NotificationSettingsView: View {
                 Toggle("Connection loss", isOn: $notifiesConnectionLoss)
                 Toggle("IPv6 leak (IPv6 in another country than IPv4)", isOn: $notifiesIPv6Leak)
                 Toggle("VPN disconnected", isOn: $notifiesVPNDisconnect)
+                Toggle("DNS leak (needs DNS check in General settings)", isOn: $notifiesDNSLeak)
             }
             .disabled(!isEnabled)
             Section("Home country") {

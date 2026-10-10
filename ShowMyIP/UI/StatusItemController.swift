@@ -27,7 +27,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private var lastHandledStatus: AppState.Status?
     private var lastHandledVPN: Bool?
     private var defaultsObserver: (any NSObjectProtocol)?
-    private var showsLocationDetails: Bool
+    private var refreshSettings: [Bool]
 
     init(
         appState: AppState,
@@ -47,7 +47,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         historyMenuFactory = HistoryMenuFactory(history: history, infoItemFactory: infoItemFactory)
         mapMenuFactory = MapMenuFactory(defaults: defaults)
         self.defaults = defaults
-        showsLocationDetails = defaults.bool(forKey: SettingsKey.showsLocationDetails)
+        refreshSettings = Self.refreshSettings(in: defaults)
         super.init()
         menu.delegate = self
         configureButton()
@@ -245,12 +245,16 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         privacyState.preferencesDidChange()
         history.preferencesDidChange()
         renderLabel()
-        let shows = defaults.bool(forKey: SettingsKey.showsLocationDetails)
-        guard shows != showsLocationDetails else {
+        let settings = Self.refreshSettings(in: defaults)
+        guard settings != refreshSettings else {
             return
         }
-        showsLocationDetails = shows
+        refreshSettings = settings
         refresh()
+    }
+
+    private static func refreshSettings(in defaults: UserDefaults) -> [Bool] {
+        [SettingsKey.showsLocationDetails, SettingsKey.checksDNS].map(defaults.bool(forKey:))
     }
 
     @objc private func refresh() {
