@@ -27,9 +27,13 @@ enum MenuInfoBuilder {
         localAddresses: [LocalAddress],
         locale: Locale,
         isHidden: Bool = false,
-        vpnStatus: VPNStatus? = nil
+        vpnStatus: VPNStatus? = nil,
+        latency: Duration? = nil
     ) -> [MenuInfoItem] {
         var items = statusItems(for: status, locale: locale, isHidden: isHidden)
+        if let latency {
+            items.append(MenuInfoItem(title: String(localized: "Ping: \(roundedMilliseconds(latency)) ms")))
+        }
         if let vpnStatus {
             items.insert(vpnItem(vpnStatus), at: hasCountryRow(status) ? 1 : 0)
         }
@@ -48,6 +52,11 @@ enum MenuInfoBuilder {
             return MenuInfoItem(title: String(localized: "⚠️ DNS leak: \(country.flagEmoji) \(name)"))
         }
         return MenuInfoItem(title: String(localized: "DNS: \(country.flagEmoji) \(name)"))
+    }
+
+    private static func roundedMilliseconds(_ duration: Duration) -> Int {
+        let (seconds, attoseconds) = duration.components
+        return Int((Double(seconds) * 1_000 + Double(attoseconds) / 1e15).rounded())
     }
 
     private static func hasCountryRow(_ status: AppState.Status) -> Bool {

@@ -661,6 +661,16 @@
         }
       }
     },
+    "Ping: %lld ms" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пинг: %lld мс"
+          }
+        }
+      }
+    },
     "Possible DNS leak" : {
       "localizations" : {
         "ru" : {

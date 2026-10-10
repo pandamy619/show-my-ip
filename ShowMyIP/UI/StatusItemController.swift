@@ -65,7 +65,8 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             localAddresses: appState.localAddresses,
             locale: .current,
             isHidden: privacyState.isHidden,
-            vpnStatus: appState.vpnStatus
+            vpnStatus: appState.vpnStatus,
+            latency: appState.latency
         )
         let hiddenStyle = PrivacyPreferences.load(from: defaults).hiddenStyle
         infoItems.forEach { menu.addItem(infoItemFactory.makeItem($0, hiddenStyle: hiddenStyle)) }
