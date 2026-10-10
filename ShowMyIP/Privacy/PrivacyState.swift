@@ -26,6 +26,16 @@ final class PrivacyState {
         isHidden.toggle()
     }
 
+    @discardableResult
+    func setHidden(_ hidden: Bool) -> Bool {
+        guard allowsHiding else {
+            isHidden = false
+            return false
+        }
+        isHidden = hidden
+        return true
+    }
+
     func preferencesDidChange() {
         if !allowsHiding, isHidden {
             isHidden = false

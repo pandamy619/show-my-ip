@@ -301,12 +301,42 @@
         }
       }
     },
+    "Get IP Details" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Узнать данные IP"
+          }
+        }
+      }
+    },
+    "Get Public IP" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Узнать публичный IP"
+          }
+        }
+      }
+    },
     "GitHub" : {
       "localizations" : {
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "GitHub"
+          }
+        }
+      }
+    },
+    "Hidden" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скрыт"
           }
         }
       }
@@ -327,6 +357,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Скрывать IP при запуске"
+          }
+        }
+      }
+    },
+    "Hide or Show IP" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скрыть или показать IP"
+          }
+        }
+      }
+    },
+    "Hides or shows your IP address in Show My IP." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скрывает или показывает ваш IP-адрес в Show My IP."
+          }
+        }
+      }
+    },
+    "Hides your IP address if it is shown, and shows it if it is hidden." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скрывает IP-адрес, если он показан, и показывает, если скрыт."
           }
         }
       }
@@ -651,6 +711,16 @@
         }
       }
     },
+    "Public IP" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Публичный IP"
+          }
+        }
+      }
+    },
     "Quit" : {
       "localizations" : {
         "ru" : {
@@ -667,6 +737,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Обновить"
+          }
+        }
+      }
+    },
+    "Returns your current public IP address." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возвращает ваш текущий публичный IP-адрес."
+          }
+        }
+      }
+    },
+    "Returns your public IP, IPv6, country, city, provider and VPN status as JSON." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Возвращает публичный IP, IPv6, страну, город, провайдера и статус VPN в формате JSON."
           }
         }
       }
@@ -781,6 +871,16 @@
         }
       }
     },
+    "Toggle IP Hiding" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переключить скрытие IP"
+          }
+        }
+      }
+    },
     "Traffic now goes through your regular connection." : {
       "localizations" : {
         "ru" : {
@@ -797,6 +897,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Выключите VPN и выберите страну, в которой вы физически находитесь."
+          }
+        }
+      }
+    },
+    "Turn on “Allow hiding IP” in Show My IP settings first." : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сначала включите «Разрешить скрытие IP» в настройках Show My IP."
           }
         }
       }
