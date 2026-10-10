@@ -28,6 +28,7 @@
 - **History** of recent IP changes, kept only on your Mac.
 - **Privacy mode.** ⌥-click the icon to hide the IP behind a spoiler — handy on calls and in cafés.
 - **Notifications.** Country change, IP change, connection loss, a warning when traffic leaves through your home country — VPN may be off, and a warning when IPv6 goes through another country than IPv4 — IPv6 may bypass the VPN.
+- **Shortcuts actions** for automations, hotkeys and the terminal.
 - **Launch at login.**
 - **English and Russian** interface.
 - **Private by design.** No analytics, no third-party dependencies, sandboxed.
@@ -53,6 +54,20 @@
 
 <p align="center"><img src="docs/images/notification.png" width="480" alt="Country change notification"></p>
 <p align="center"><img src="docs/images/settings.png" width="560" alt="Privacy settings"></p>
+
+## Shortcuts
+
+The app adds actions to the Shortcuts app: **Get Public IP**, **Get IP Details** (JSON), **Hide or Show IP** and **Toggle IP Hiding**. Use them in automations, assign a keyboard shortcut, or run them from the terminal:
+
+1. In Shortcuts, create a shortcut named `My IP` with the **Get IP Details** action.
+2. Run it:
+
+```sh
+shortcuts run "My IP" | cat
+# {"city":"Amsterdam","country":"NL","ip":"203.0.113.42","vpn":true}
+```
+
+The app must be running.
 
 ## FAQ
 
