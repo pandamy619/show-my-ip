@@ -251,6 +251,16 @@
         }
       }
     },
+    "Export as CSV…" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Экспорт в CSV…"
+          }
+        }
+      }
+    },
     "Finds your DNS resolver via whoami.akamai.net and sends its IP to ipinfo.io." : {
       "localizations" : {
         "ru" : {
