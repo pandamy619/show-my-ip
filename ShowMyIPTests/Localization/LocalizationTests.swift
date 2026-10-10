@@ -30,6 +30,7 @@ struct LocalizationTests {
         ("Show map", "Показывать карту"),
         ("Possible IPv6 leak", "Возможна утечка IPv6"),
         ("VPN disconnected", "VPN отключился"),
+        ("Possible DNS leak", "Возможна утечка DNS"),
         ("Keep IP history", "Вести историю IP"),
     ])
     func translatesToRussian(key: String, expected: String) throws {
