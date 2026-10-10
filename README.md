@@ -25,7 +25,7 @@
 - **VPN status** in the menu, optional 🔒 in the menu bar, and an alert when the VPN disconnects.
 - **DNS leak check** (optional): which country your DNS resolver is in, with a warning when it differs from your IP.
 - **Map** of the IP location in the menu (optional).
-- **History** of recent IP changes, kept only on your Mac.
+- **History** of recent IP changes, kept only on your Mac, with CSV export.
 - **Privacy mode.** ⌥-click the icon to hide the IP behind a spoiler — handy on calls and in cafés.
 - **Notifications.** Country change, IP change, connection loss, a warning when traffic leaves through your home country — VPN may be off, and a warning when IPv6 goes through another country than IPv4 — IPv6 may bypass the VPN.
 - **Shortcuts actions** for automations, hotkeys and the terminal.
