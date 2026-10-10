@@ -14,14 +14,16 @@ struct AppStateTests {
         networkMonitor: any NetworkMonitoring = StubNetworkMonitor(stream: AsyncStream { _ in }),
         sleeper: ManualSleeper = ManualSleeper(),
         localAddresses: [LocalAddress] = [],
-        vpnStatus: VPNStatus = VPNStatus(interfaceName: nil)
+        vpnStatus: VPNStatus = VPNStatus(interfaceName: nil),
+        latency: Duration? = nil
     ) -> AppState {
         AppState(
             provider: provider,
             networkMonitor: networkMonitor,
             sleep: { duration in try await sleeper.sleep(for: duration) },
             readLocalAddresses: { localAddresses },
-            readVPNStatus: { vpnStatus }
+            readVPNStatus: { vpnStatus },
+            measureLatency: { latency }
         )
     }
 
@@ -149,5 +151,21 @@ struct AppStateTests {
         let state = makeState(provider: StubIPProvider { info }, vpnStatus: VPNStatus(interfaceName: "utun4"))
         await state.refresh()
         #expect(state.vpnStatus == VPNStatus(interfaceName: "utun4"))
+    }
+
+    @Test func refreshMeasuresLatency() async throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        let state = makeState(provider: StubIPProvider { info }, latency: .milliseconds(23))
+        await state.refresh()
+        #expect(state.latency == .milliseconds(23))
+    }
+
+    @Test func goingOfflineClearsLatency() async throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        let state = makeState(provider: StubIPProvider { info }, latency: .milliseconds(23))
+        await state.refresh()
+        state.networkDidChange(wifi)
+        state.networkDidChange(offline)
+        #expect(state.latency == nil)
     }
 }

@@ -32,6 +32,7 @@ struct LocalizationTests {
         ("VPN disconnected", "VPN отключился"),
         ("Possible DNS leak", "Возможна утечка DNS"),
         ("Get Public IP", "Узнать публичный IP"),
+        ("Ping: %lld ms", "Пинг: %lld мс"),
         ("Keep IP history", "Вести историю IP"),
     ])
     func translatesToRussian(key: String, expected: String) throws {

@@ -73,6 +73,18 @@ struct MenuInfoBuilderTests {
         #expect(!items(for: .loaded(info)).contains { $0.title.contains("VPN") })
     }
 
+    @Test(arguments: [(Duration.milliseconds(23), "Ping: 23 ms"), (Duration.microseconds(23_600), "Ping: 24 ms")])
+    func latencyIsShownInWholeMilliseconds(latency: Duration, expected: String) throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        let result = MenuInfoBuilder.items(for: .loaded(info), localAddresses: [], locale: locale, latency: latency)
+        #expect(result.contains(MenuInfoItem(title: expected)))
+    }
+
+    @Test func missingLatencyIsNotShown() throws {
+        let info = try IPInfo.fixture(address: "185.23.45.67", country: "NL")
+        #expect(!items(for: .loaded(info)).contains { $0.title.hasPrefix("Ping") })
+    }
+
     @Test func statusMessagesForNonLoadedStates() {
         #expect(items(for: .loading) == [MenuInfoItem(title: "Loading…")])
         #expect(items(for: .offline) == [MenuInfoItem(title: "No network connection")])
