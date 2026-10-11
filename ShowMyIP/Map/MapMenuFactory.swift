@@ -9,6 +9,12 @@ final class MapMenuFactory {
         }
     }
 
+    private lazy var item: NSMenuItem = {
+        let item = NSMenuItem()
+        item.view = mapView
+        return item
+    }()
+
     init(defaults: UserDefaults) {
         self.defaults = defaults
     }
@@ -18,8 +24,6 @@ final class MapMenuFactory {
             return nil
         }
         mapView.show(location)
-        let item = NSMenuItem()
-        item.view = mapView
         return item
     }
 
