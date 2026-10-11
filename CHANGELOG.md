@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.3.2] — 2026-10-11
 
 - The map no longer disappears when the open menu updates.
 
