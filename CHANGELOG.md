@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.3.1] — 2026-10-11
 
 - The open menu now updates live when the IP, VPN status or ping change.
 
