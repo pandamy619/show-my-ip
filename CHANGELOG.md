@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- The open menu now updates live when the IP, VPN status or ping change.
+
 ## [0.3.0] — 2026-10-10
 
 - Optional map of the IP location at the top of the menu (Apple Maps, off by default).
