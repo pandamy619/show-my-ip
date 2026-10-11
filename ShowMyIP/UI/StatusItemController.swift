@@ -243,9 +243,10 @@ final class StatusItemController: NSObject {
 
 extension StatusItemController: NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
-        menu.removeAllItems()
-        if let mapItem = mapMenuFactory.makeItem(for: appState.status, isHidden: privacyState.isHidden) {
-            menu.addItem(mapItem)
+        let mapItem = mapMenuFactory.makeItem(for: appState.status, isHidden: privacyState.isHidden)
+        menu.items.filter { $0 !== mapItem }.forEach(menu.removeItem)
+        if let mapItem, mapItem.menu == nil {
+            menu.insertItem(mapItem, at: 0)
         }
         let infoItems = MenuInfoBuilder.items(
             for: appState.status,
