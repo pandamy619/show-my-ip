@@ -2,7 +2,7 @@ import AppKit
 import Observation
 
 @MainActor
-final class StatusItemController: NSObject, NSMenuDelegate {
+final class StatusItemController: NSObject {
     private static let maskedFont = NSFont.monospacedSystemFont(
         ofSize: NSFont.menuBarFont(ofSize: 0).pointSize,
         weight: .regular
@@ -27,6 +27,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
     private var lastHandledStatus: AppState.Status?
     private var lastHandledVPN: Bool?
     private var defaultsObserver: (any NSObjectProtocol)?
+    private var isMenuOpen = false
     private var refreshSettings: [Bool]
 
     init(
@@ -53,32 +54,6 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         configureButton()
         observeDefaults()
         observeState()
-    }
-
-    func menuNeedsUpdate(_ menu: NSMenu) {
-        menu.removeAllItems()
-        if let mapItem = mapMenuFactory.makeItem(for: appState.status, isHidden: privacyState.isHidden) {
-            menu.addItem(mapItem)
-        }
-        let infoItems = MenuInfoBuilder.items(
-            for: appState.status,
-            localAddresses: appState.localAddresses,
-            locale: .current,
-            isHidden: privacyState.isHidden,
-            vpnStatus: appState.vpnStatus,
-            latency: appState.latency
-        )
-        let hiddenStyle = PrivacyPreferences.load(from: defaults).hiddenStyle
-        infoItems.forEach { menu.addItem(infoItemFactory.makeItem($0, hiddenStyle: hiddenStyle)) }
-        menu.addItem(.separator())
-        if history.isEnabled {
-            menu.addItem(historyMenuFactory.makeItem(isHidden: privacyState.isHidden, hiddenStyle: hiddenStyle))
-            menu.addItem(.separator())
-        }
-        menu.addItem(makeActionItem(String(localized: "Refresh"), action: #selector(refresh), key: "r"))
-        menu.addItem(makeActionItem(String(localized: "Settings…"), action: #selector(openSettings), key: ","))
-        menu.addItem(.separator())
-        menu.addItem(makeActionItem(String(localized: "Quit"), action: #selector(quit), key: "q"))
     }
 
     private func configureButton() {
@@ -108,6 +83,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         withObservationTracking {
             renderLabel()
             statusDidChange()
+            rebuildOpenMenu()
         } onChange: { [weak self] in
             Task { @MainActor in
                 self?.observeState()
@@ -220,12 +196,6 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         )
     }
 
-    private func makeActionItem(_ title: String, action: Selector, key: String) -> NSMenuItem {
-        let item = NSMenuItem(title: title, action: action, keyEquivalent: key)
-        item.target = self
-        return item
-    }
-
     @objc private func statusItemClicked() {
         let modifiers = NSApplication.shared.currentEvent?.modifierFlags ?? []
         switch StatusItemClick.action(modifiers: modifiers, allowsHiding: privacyState.allowsHiding) {
@@ -268,5 +238,55 @@ final class StatusItemController: NSObject, NSMenuDelegate {
 
     @objc private func quit() {
         NSApplication.shared.terminate(nil)
+    }
+}
+
+extension StatusItemController: NSMenuDelegate {
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        menu.removeAllItems()
+        if let mapItem = mapMenuFactory.makeItem(for: appState.status, isHidden: privacyState.isHidden) {
+            menu.addItem(mapItem)
+        }
+        let infoItems = MenuInfoBuilder.items(
+            for: appState.status,
+            localAddresses: appState.localAddresses,
+            locale: .current,
+            isHidden: privacyState.isHidden,
+            vpnStatus: appState.vpnStatus,
+            latency: appState.latency
+        )
+        let hiddenStyle = PrivacyPreferences.load(from: defaults).hiddenStyle
+        infoItems.forEach { menu.addItem(infoItemFactory.makeItem($0, hiddenStyle: hiddenStyle)) }
+        menu.addItem(.separator())
+        if history.isEnabled {
+            menu.addItem(historyMenuFactory.makeItem(isHidden: privacyState.isHidden, hiddenStyle: hiddenStyle))
+            menu.addItem(.separator())
+        }
+        menu.addItem(makeActionItem(String(localized: "Refresh"), action: #selector(refresh), key: "r"))
+        menu.addItem(makeActionItem(String(localized: "Settings…"), action: #selector(openSettings), key: ","))
+        menu.addItem(.separator())
+        menu.addItem(makeActionItem(String(localized: "Quit"), action: #selector(quit), key: "q"))
+    }
+
+    func menuWillOpen(_ menu: NSMenu) {
+        isMenuOpen = true
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        isMenuOpen = false
+    }
+
+    private func rebuildOpenMenu() {
+        _ = (appState.status, appState.vpnStatus, appState.latency, appState.localAddresses)
+        guard isMenuOpen else {
+            return
+        }
+        menuNeedsUpdate(menu)
+    }
+
+    private func makeActionItem(_ title: String, action: Selector, key: String) -> NSMenuItem {
+        let item = NSMenuItem(title: title, action: action, keyEquivalent: key)
+        item.target = self
+        return item
     }
 }
