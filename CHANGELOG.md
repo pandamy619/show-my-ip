@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.3.3] — 2026-11-10
 
 - Option-click hides the IP on trackpad clicks and when Caps Lock is on (for example, when Caps Lock switches the input language) or fn is held.
 
