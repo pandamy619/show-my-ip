@@ -197,8 +197,12 @@ final class StatusItemController: NSObject {
     }
 
     @objc private func statusItemClicked() {
-        let modifiers = NSApplication.shared.currentEvent?.modifierFlags ?? []
-        switch StatusItemClick.action(modifiers: modifiers, allowsHiding: privacyState.allowsHiding) {
+        let action = StatusItemClick.action(
+            modifiers: NSApplication.shared.currentEvent?.modifierFlags ?? [],
+            heldModifiers: NSEvent.modifierFlags,
+            allowsHiding: privacyState.allowsHiding
+        )
+        switch action {
         case .toggleHidden:
             privacyState.toggle()
         case .openMenu:
