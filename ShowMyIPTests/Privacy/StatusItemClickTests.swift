@@ -20,6 +20,16 @@ struct StatusItemClickTests {
         #expect(StatusItemClick.action(modifiers: [.command], allowsHiding: true) == .openMenu)
     }
 
+    @Test func heldOptionTogglesWhenEventHasNoModifiers() {
+        let action = StatusItemClick.action(modifiers: [], heldModifiers: [.option], allowsHiding: true)
+        #expect(action == .toggleHidden)
+    }
+
+    @Test func heldCommandWithOptionEventOpensMenu() {
+        let action = StatusItemClick.action(modifiers: [.option], heldModifiers: [.command], allowsHiding: true)
+        #expect(action == .openMenu)
+    }
+
     private static let optionWithStateFlags: [NSEvent.ModifierFlags] = [
         [.option, .capsLock],
         [.option, .function],
