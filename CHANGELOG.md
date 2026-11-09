@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Option-click hides the IP on trackpad clicks and when Caps Lock is on (for example, when Caps Lock switches the input language) or fn is held.
+
 ## [0.3.2] — 2026-10-11
 
 - The map no longer disappears when the open menu updates.
