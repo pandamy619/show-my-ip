@@ -4,8 +4,9 @@ enum StatusItemClick: Equatable {
     case openMenu
     case toggleHidden
 
+    private static let pressedModifiers: NSEvent.ModifierFlags = [.shift, .control, .option, .command]
+
     static func action(modifiers: NSEvent.ModifierFlags, allowsHiding: Bool) -> StatusItemClick {
-        let relevant = modifiers.intersection(.deviceIndependentFlagsMask)
-        return allowsHiding && relevant == .option ? .toggleHidden : .openMenu
+        allowsHiding && modifiers.intersection(pressedModifiers) == .option ? .toggleHidden : .openMenu
     }
 }
